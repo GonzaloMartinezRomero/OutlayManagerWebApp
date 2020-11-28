@@ -1,0 +1,56 @@
+﻿@using OutlayManagerWeb.Extensions;
+@model OutlayManagerWeb.Models.ViewModels.TransactionCalendarModel
+
+<link rel="stylesheet" href="~/css/CalendarStyleSheet.css" />
+    
+        <div id="calendar">
+            <ul class="weekdays">
+                @{
+                    foreach (string day in Model.WeekDays)
+                    {
+                        <li>@day</li>
+                    }
+                }
+            </ul>
+            @{
+                DateTime fechaActual = Model.TransactionsDate;
+
+                @for (int semana = 1; semana <= 5; ++semana)
+                {
+                    <ul class="days">
+
+                        @for (int diaSemana = 1; diaSemana <= 7; ++diaSemana)
+                        {
+                            @if (fechaActual.WeekDayES(null) == diaSemana && fechaActual.Month == Model.TransactionsDate.Month)
+                            {
+                                <li class="day">
+                                    <div class="date">@fechaActual.Day</div>
+
+                                    @if (Model.Transactions.ContainsKey(fechaActual))
+                                    {
+                                        List<string> transactionsListOfDay = Model.Transactions[fechaActual];
+
+                                        foreach (string transactionAuxStr in transactionsListOfDay)
+                                        {
+                                            <div class="event">
+                                                @transactionAuxStr
+                                            </div>
+                                        }
+                                    }
+                                </li>
+
+                                fechaActual = fechaActual.AddDays(1);
+                            }
+                            else
+                            {
+                                <li class="day other-month">
+                                    <div class="date">-</div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+            }
+        </div>
+    
+<script src="~/js/CalendarTransactionsScripts.js"></script>

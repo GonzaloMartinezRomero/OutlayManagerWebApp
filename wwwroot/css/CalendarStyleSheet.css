@@ -1,0 +1,215 @@
+﻿.calendarHeader {
+    text-align: center
+}
+
+#calendar {
+    width: 100%;    
+}
+
+    #calendar a {
+        color: #8e352e;
+        text-decoration: none;
+    }
+
+    #calendar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    #calendar li {
+        display: block;
+        float: left;
+        width: 14.342%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        margin-right: -1px;
+        margin-bottom: -1px;
+    }
+
+    #calendar ul.weekdays {
+        height: 40px;
+        background: #8e352e;
+    }
+
+        #calendar ul.weekdays li {
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 20px;
+            border: none !important;
+            padding: 10px 6px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+    #calendar .days li {
+        height: 180px;
+    }
+
+        #calendar .days li:hover {
+            background: #d3d3d3;
+        }
+
+    #calendar .date {
+        text-align: center;
+        margin-bottom: 5px;
+        background: #333;
+        color: #fff;
+        width: 25px;
+        float: left;
+    }
+
+    #calendar .event {
+        clear: both;
+        display: block;
+        font-size: 13px;
+        border-radius: 4px;
+        padding: 5px;
+        margin-bottom: 5px;
+        line-height: 14px;
+        background: #e4f2f2;
+        border: 1px solid #b5dbdc;
+        color: #009aaf;
+        text-decoration: none;
+    }
+
+    #calendar .event-desc {
+        color: #666;
+        margin: 3px 0 7px 0;
+        text-decoration: none;
+    }
+
+    #calendar .other-month {
+        background: #f5f5f5;
+        color: #e1c5c5;
+    }
+
+/* ============================
+				Mobile Responsiveness
+   ============================*/
+
+
+@media(max-width: 768px) {
+
+    #calendar .weekdays, #calendar .other-month {
+        display: none;
+    }
+
+    #calendar li {
+        height: auto !important;
+        border: 1px solid #ededed;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: -1px;
+    }
+
+    #calendar .date {
+        float: none;
+    }
+}
+
+.arrow {
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+}
+
+    .arrow:after {
+        position: absolute;
+        border-bottom: 20px solid transparent;
+        border-top: 20px solid transparent;
+        height: 0px;
+        width: 0px;
+        right: 0;
+    }
+
+    .arrow:hover, .arrow:active {
+        background: #c8e7ff;
+        color: black;
+    }
+
+/*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+
+.vertical-nav {
+    min-width: 17rem;
+    width: 17rem;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s;
+}
+
+.page-content {
+    width: calc(100% - 17rem);
+    margin-left: 17rem;
+    transition: all 0.4s;
+}
+
+/* for toggle behavior */
+
+#sidebar.active {
+    margin-left: -17rem;
+}
+
+#content.active {
+    width: 100%;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -17rem;
+    }
+
+        #sidebar.active {
+            margin-left: 0;
+        }
+
+    #content {
+        width: 100%;
+        margin: 0;
+    }
+
+        #content.active {
+            margin-left: 17rem;
+            width: calc(100% - 17rem);
+        }
+}
+
+/*
+*
+* ==========================================
+* FOR DEMO PURPOSE
+* ==========================================
+*
+*/
+
+body {
+    background: #599fd9;
+    background: -webkit-linear-gradient(to right, #599fd9, #c2e59c);
+    background: linear-gradient(to right, #599fd9, #c2e59c);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.separator {
+    margin: 3rem 0;
+    border-bottom: 1px dashed #fff;
+}
+
+.text-uppercase {
+    letter-spacing: 0.1em;
+}
+
+.text-gray {
+    color: #aaa;
+}
