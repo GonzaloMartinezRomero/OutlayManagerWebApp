@@ -1,0 +1,48 @@
+﻿<div class="container-fluid">
+    <h1> {{title}} </h1>
+    <br>
+    <date-selector></date-selector>
+    <br>
+    <calendar></calendar>
+</div>
+
+
+<ng-template #modalMessage let-modal>
+
+    <div [ngSwitch]="messageView.verbose">
+
+        <div *ngSwitchCase="informationType">
+
+            <div class="modal-header">
+                <h4 class="modal-title text-info" >Information</h4>
+            </div>
+
+            <div class="modal-body">
+                <h4>{{messageView.action}}</h4>
+                <p> {{messageView.detail}}</p>
+            </div>
+
+        </div>
+        <div *ngSwitchCase="errorType">
+
+            <div class="modal-header">
+                <h4 class="modal-title text-danger">Error</h4>
+            </div>
+
+            <div class="modal-body">
+                <h5>Action: {{messageView.action}}</h5>
+                <h5>Error: {{messageView.titleError}}</h5>
+                <h5>Detail: {{messageView.detail}}</h5>
+                <h5>StatusCode: {{messageView.statusCode}}</h5>
+            </div>
+
+        </div>
+        <div *ngSwitchDefault>
+            <h3 class="alert-danger">Critical internal error</h3>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="closeModalMessage()">OK</button>
+    </div>
+</ng-template>

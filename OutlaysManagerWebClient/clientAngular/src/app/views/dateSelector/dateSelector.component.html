@@ -1,0 +1,17 @@
+﻿<div class="border">
+    <form class="form-inline">
+        <div class="form-group">
+            <label class="ml-2">Select Year</label>
+            <select class="form-control ml-2" [(ngModel)]="year">
+                <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
+            </select>
+        </div>
+        <div class="form-group ml-4">
+            <label class="ml-2">Select Month</label>
+            <select class="form-control ml-2" [(ngModel)]="monthView">
+                <option *ngFor="let monthAux of monthsNamesMap.keys()">{{monthAux}}</option>
+            </select>
+        </div>
+        <button id="buttonLoadCalendar" type="button" class="btn btn-primary ml-2" (click)="updateCalendar()">Load Calendar</button>        
+    </form>    
+</div>
