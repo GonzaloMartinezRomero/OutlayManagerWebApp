@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 import { TransactionDTO } from "../model/TransactionDTO";
 import { TransacionCalendar, TransactionsCalendarContainer } from "../model/TransactionsCalendarContainer";
 import { OutlayManagerAPI } from "./OutlayManagerAPI.service";
@@ -9,7 +10,9 @@ export class CalendarService {
 
     private weekDays: Array<string> = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
 
-    public transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();    
+    public transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();
+
+    public matrixCalendarSubject: Subject<Array<Array<TransacionCalendar>>> = new Subject<Array<Array<TransacionCalendar>>>();   
 
     constructor(private outlayManagerAPI: OutlayManagerAPI) { }
 
@@ -35,7 +38,8 @@ export class CalendarService {
                 });
 
                 this.loadCompleteCalendar(year, month, transactionsMap);
-                
+
+                this.matrixCalendarSubject.next(this.transactionsCalendar.matrixCalendar);                
             });
     }
 

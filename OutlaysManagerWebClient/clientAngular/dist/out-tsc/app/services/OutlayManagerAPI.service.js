@@ -9,13 +9,12 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         this.listaTransacciones = new Array();
     }
     loadTransactions(year, month) {
-        var getAllTransactionURL = this.HOST + "Outlay" + "?year=" + year.toString() + "&month=" + month.toString();
-        return this.httpClient.get(getAllTransactionURL)
-            .pipe(catchError((e) => {
-            var exception = this.buildExceptionMessage(e, "Get all transactions");
+        var endPoint = this.HOST + "Outlay?year=" + year + "&month=" + month;
+        return this.httpClient.get(endPoint)
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Get all transactions");
             throw exception;
         }));
-        ;
     }
     saveTransaction(transaction) {
         var CRUDOperationURL = this.HOST + "Outlay";
@@ -27,7 +26,6 @@ let OutlayManagerAPI = class OutlayManagerAPI {
                 var exception = this.buildExceptionMessage(e, "Save");
                 throw exception;
             }));
-            ;
         }
         else {
             return this.httpClient.put(CRUDOperationURL, transactionJSON, { headers: customHeader })
@@ -35,7 +33,6 @@ let OutlayManagerAPI = class OutlayManagerAPI {
                 var exception = this.buildExceptionMessage(e, "Save");
                 throw exception;
             }));
-            ;
         }
     }
     deleteTransaction(transactionID) {

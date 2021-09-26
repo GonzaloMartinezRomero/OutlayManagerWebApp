@@ -21,9 +21,8 @@ let DateSelector = class DateSelector {
             ["Diciembre", 12],
         ]);
         this.yearsAvailables = new Array();
-        var today = new Date();
-        this.year = today.getFullYear().toString();
-        this.month = today.getMonth().toString();
+        this.year = "";
+        this.monthView = "";
     }
     ngOnInit() {
         this.outlayManagerAPI.loadYearsAvailabes()
@@ -32,18 +31,21 @@ let DateSelector = class DateSelector {
             //Cargar el año siguiente al ultimo año
             this.yearsAvailables.push(this.yearsAvailables[this.yearsAvailables.length - 1] + 1);
         }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables")); });
-        this.updateCalendar();
     }
     updateCalendar() {
-        const yearNormalized = parseInt(this.year);
-        const monthNormalized = this.monthsNamesMap.get(this.month);
         try {
+            var yearNormalized = parseInt(this.year);
+            var monthNormalized = this.monthsNamesMap.get(this.monthView);
+            if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
+                throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
+            }
             this.calendarService.loadTransactionsCalendar(yearNormalized, monthNormalized);
         }
         catch (exception) {
             var messageView = new MessageView();
             messageView.action = "Calendar Builder";
             messageView.titleError = exception.toString();
+            messageView.verbose = VerboseType.Error;
             this.mainApp.openModalMessage(messageView);
         }
     }

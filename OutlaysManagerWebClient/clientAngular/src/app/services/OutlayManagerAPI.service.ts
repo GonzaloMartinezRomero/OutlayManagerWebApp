@@ -17,6 +17,18 @@ export class OutlayManagerAPI {
 
     }
 
+    public loadAllTransactions(): Observable<TransactionDTO[]> {
+
+        var endPoint: string = this.HOST + "Outlay/All";
+
+        return this.httpClient.get<TransactionDTO[]>(endPoint)
+            .pipe(catchError((ex: any) => {
+
+                var exception = this.buildExceptionMessage(ex, "Get all transactions");
+                throw exception;
+            }));
+    }
+
     public loadTransactions(year: number, month: number): Observable<TransactionDTO[]>
     {   
         var endPoint: string = this.HOST + "Outlay?year=" + year + "&month=" + month;
@@ -24,7 +36,7 @@ export class OutlayManagerAPI {
         return this.httpClient.get<TransactionDTO[]>(endPoint)
             .pipe(catchError((ex: any) => {
 
-                var exception = this.buildExceptionMessage(ex, "Get all transactions");
+                var exception = this.buildExceptionMessage(ex, "Get transactions");
                 throw exception;
             }));
     }

@@ -3,8 +3,6 @@ export class TransactionsCalendarContainer {
         this.weekDays = new Array();
         this.year = 0;
         this.month = 0;
-        //total amount
-        //total saves
         this.matrixCalendar = new Array();
     }
 }

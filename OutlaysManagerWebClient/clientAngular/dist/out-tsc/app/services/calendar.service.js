@@ -1,16 +1,18 @@
 import { __decorate } from "tslib";
 import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 import { TransacionCalendar, TransactionsCalendarContainer } from "../model/TransactionsCalendarContainer";
 let CalendarService = class CalendarService {
     constructor(outlayManagerAPI) {
         this.outlayManagerAPI = outlayManagerAPI;
         this.weekDays = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
         this.transactionsCalendar = new TransactionsCalendarContainer();
+        this.matrixCalendarSubject = new Subject();
     }
     loadTransactionsCalendar(year, month) {
         this.outlayManagerAPI.loadTransactions(year, month)
             .subscribe(response => {
-            let transactionsMap = new Map();
+            var transactionsMap = new Map();
             response.forEach(transactionAux => {
                 var _a;
                 var day = new Date(transactionAux.date).getDate();
@@ -18,12 +20,13 @@ let CalendarService = class CalendarService {
                     (_a = transactionsMap.get(day)) === null || _a === void 0 ? void 0 : _a.push(transactionAux);
                 }
                 else {
-                    let array = new Array();
+                    var array = new Array();
                     array.push(transactionAux);
                     transactionsMap.set(day, array);
                 }
             });
             this.loadCompleteCalendar(year, month, transactionsMap);
+            this.matrixCalendarSubject.next(this.transactionsCalendar.matrixCalendar);
         });
     }
     loadCompleteCalendar(year, month, transactionsMap) {

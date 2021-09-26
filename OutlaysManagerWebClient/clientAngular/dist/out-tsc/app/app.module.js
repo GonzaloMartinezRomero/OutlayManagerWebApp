@@ -9,6 +9,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { OutlayManagerAPI } from './services/OutlayManagerAPI.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Calendar } from './views/calendar/calendar.component';
+import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -17,6 +18,7 @@ AppModule = __decorate([
             AppComponent,
             DateSelector,
             Calendar,
+            ResumeOutlays
         ],
         imports: [
             BrowserModule,
