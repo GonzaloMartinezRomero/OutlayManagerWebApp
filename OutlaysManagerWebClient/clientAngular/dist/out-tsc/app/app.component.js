@@ -5,7 +5,6 @@ import { MessageView, VerboseType } from './model/MessageView';
 let AppComponent = class AppComponent {
     constructor(ngbModal) {
         this.ngbModal = ngbModal;
-        this.title = 'Outlay Manager Web APP';
         this.messageView = new MessageView();
         this.informationType = VerboseType.Information;
         this.errorType = VerboseType.Error;
@@ -39,7 +38,6 @@ AppComponent = __decorate([
     Component({
         selector: 'OutlayManagerMainPage',
         templateUrl: "app.component.html",
-        styles: []
     }),
     Injectable()
 ], AppComponent);

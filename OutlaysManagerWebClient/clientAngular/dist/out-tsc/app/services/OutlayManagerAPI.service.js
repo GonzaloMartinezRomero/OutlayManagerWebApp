@@ -8,11 +8,19 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         this.HOST = "http://localhost:5000/";
         this.listaTransacciones = new Array();
     }
+    loadAllTransactions() {
+        var endPoint = this.HOST + "Outlay/All";
+        return this.httpClient.get(endPoint)
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Get all transactions");
+            throw exception;
+        }));
+    }
     loadTransactions(year, month) {
         var endPoint = this.HOST + "Outlay?year=" + year + "&month=" + month;
         return this.httpClient.get(endPoint)
             .pipe(catchError((ex) => {
-            var exception = this.buildExceptionMessage(ex, "Get all transactions");
+            var exception = this.buildExceptionMessage(ex, "Get transactions");
             throw exception;
         }));
     }
