@@ -3,8 +3,6 @@ export class TransactionsCalendarContainer {
         this.weekDays = new Array();
         this.year = 0;
         this.month = 0;
-        //total amount
-        //total saves
         this.matrixCalendar = new Array();
     }
 }
@@ -13,6 +11,7 @@ export class TransacionCalendar {
         this.transactionArray = new Array();
         this.isTransactionAvailable = true;
         this.day = 0;
+        this.isToday = false;
     }
 }
 //# sourceMappingURL=TransactionsCalendarContainer.js.map

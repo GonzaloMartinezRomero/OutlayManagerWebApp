@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { toInteger } from "@ng-bootstrap/ng-bootstrap/util/util";
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { CalendarService } from "../../services/calendar.service";
@@ -30,12 +31,11 @@ export class DateSelector implements OnInit {
         ]);
 
     public yearsAvailables: Array<number> = new Array<number>();
-
-    public year: string = "";
-    public monthView: string = ""; 
+    public yearView: string = "";
+    public monthView: string = "";
 
     constructor(public calendarService: CalendarService, private outlayManagerAPI: OutlayManagerAPI, private mainApp: AppComponent) {
-
+       
     }
 
     ngOnInit(): void {
@@ -44,18 +44,18 @@ export class DateSelector implements OnInit {
             .subscribe(response =>
             {
                 this.yearsAvailables = response;
+                this.loadCurrentDateToView();
 
-                //Cargar el año siguiente al ultimo año
-                this.yearsAvailables.push(this.yearsAvailables[this.yearsAvailables.length - 1] + 1);
-
-            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error,"Load Years Availables")); }); 
+            }, error => {
+                this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
+            });       
     }
 
     public updateCalendar():void {
         
         try
         {
-            var yearNormalized: number = parseInt(this.year);
+            var yearNormalized: number = parseInt(this.yearView);
             var monthNormalized: number = this.monthsNamesMap.get(this.monthView) as number;
 
             if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
@@ -86,5 +86,26 @@ export class DateSelector implements OnInit {
         messageView.verbose = VerboseType.Error;
 
         return messageView;
+    }
+
+    private loadCurrentDateToView() {
+
+        var today: Date = new Date(Date.now());
+
+        var currentYear: number = today.getFullYear();
+
+        if (!this.yearsAvailables.find(value => value === currentYear)) {
+            this.yearsAvailables.push(currentYear);
+        }
+
+        this.yearView = currentYear.toString();
+        
+        var currentMonth = today.getMonth() + 1;
+        this.monthsNamesMap.forEach((value, key) =>
+        {
+            if (value === currentMonth) {
+                this.monthView = key;                
+            }   
+        });
     }
 }

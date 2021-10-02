@@ -1,0 +1,2 @@
+Color resaltado en el dia de hoy
+Poner en el selector al fecha actual

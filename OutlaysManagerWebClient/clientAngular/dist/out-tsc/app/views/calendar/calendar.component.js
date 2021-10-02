@@ -1,17 +1,23 @@
 import { __decorate } from "tslib";
 import { Component } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { DetailTransaction, TransactionDTO } from "../../model/TransactionDTO";
+import { DetailTransaction, TransactionDTO, Type } from "../../model/TransactionDTO";
 let Calendar = class Calendar {
     constructor(calendarService, outlayManagerService, modalABM, mainApp) {
         this.calendarService = calendarService;
         this.outlayManagerService = outlayManagerService;
         this.modalABM = modalABM;
         this.mainApp = mainApp;
+        this.deleteConfirmationModalRef = undefined;
+        this.AdjustType = Type.Adjust;
+        this.IncomingType = Type.Incoming;
+        this.SpendType = Type.Spending;
+        this.PATH_IMG_SPENDING = "clientAngular/assets/img/expenseArrow.svg";
+        this.PATH_IMG_INCOMING = "clientAngular/assets/img/incomingArrow.svg";
+        this.PATH_IMG_ADJUST = "clientAngular/assets/img/adjustIcon.svg";
         this.transactionView = new TransactionDTO();
         this.transactionTypeArray = new Array();
         this.transactionCodesArray = new Array();
-        this.deleteConfirmationModalRef = undefined;
         this.transactionsCalendar = calendarService.transactionsCalendar;
     }
     ngOnInit() {
@@ -71,7 +77,8 @@ let Calendar = class Calendar {
         }
     }
     toTransactionView(transaction) {
-        let transactionInfo = `[${transaction.detailTransaction.type.toString()}] ${transaction.detailTransaction.code}: ${transaction.amount}€`;
+        //let transactionInfo = `[${transaction.detailTransaction.type.toString()}] ${transaction.detailTransaction.code}: ${transaction.amount}€`;
+        let transactionInfo = `${transaction.detailTransaction.code}: ${transaction.amount}€`;
         return transactionInfo;
     }
     copyTransaction(transaction) {

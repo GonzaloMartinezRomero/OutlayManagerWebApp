@@ -14,10 +14,17 @@
             <th *ngFor="let transactionDayAux of week">
                 <div *ngIf="transactionDayAux.isTransactionAvailable">
                     <table class="table">
-                        <thead class="border">
+                        <thead *ngIf="transactionDayAux.isToday" class="border bg-warning">
                             <tr>
                                 <th>
-                                  <p><b>Day {{transactionDayAux.day}}</b></p>
+                                    <p><b>Day {{transactionDayAux.day}}</b></p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <thead *ngIf="!transactionDayAux.isToday" class="border">
+                            <tr>
+                                <th>
+                                    <p><b>Day {{transactionDayAux.day}}</b></p>
                                 </th>
                             </tr>
                         </thead>
@@ -25,13 +32,25 @@
                             <tr>
                                 <th>
                                     <div class="list-group">
-                                        <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)"> {{toTransactionView(transactionAux)}}</button>
-                                    </div>                                   
+                                        <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
+                                            <div [ngSwitch]="transactionAux.detailTransaction.type">
+                                                <div *ngSwitchCase="AdjustType">
+                                                    <img src="{{PATH_IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
+                                                </div>
+                                                <div *ngSwitchCase="IncomingType">
+                                                    <img src="{{PATH_IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
+                                                </div>
+                                                <div *ngSwitchCase="SpendType">
+                                                    <img src="{{PATH_IMG_SPENDING}}" /> {{toTransactionView(transactionAux)}}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
                                 </th>
                             </tr>
                             <tr>
                                 <th>
-                                    <button type="button" class="btn btn-secondary" (click)="openTransactionConfigModal(modalABMTransaction, undefined, transactionDayAux.day)">+</button>
+                                    <button type="button" class="btn btn-success" (click)="openTransactionConfigModal(modalABMTransaction, undefined, transactionDayAux.day)">+</button>
                                 </th>
                             </tr>
                         </tbody>
@@ -66,7 +85,7 @@
 
             <div class="form-group">
                 <label for="transactionCode">Code</label>
-                <select class="form-control" [(ngModel)]="transactionView.detailTransaction.code" id="transactionCode" name="transactionCode" #transactionCode="ngModel" required>                    
+                <select class="form-control" [(ngModel)]="transactionView.detailTransaction.code" id="transactionCode" name="transactionCode" #transactionCode="ngModel" required>
                     <option *ngFor="let transactionCodeArrayAux of transactionCodesArray">{{transactionCodeArrayAux}}</option>
                 </select>
                 <div class="alert-danger" *ngIf="transactionCode.invalid">Transaction code not valid!</div>
@@ -75,7 +94,7 @@
             <div class="form-group">
                 <label for="amount">Amount</label>
                 <input type="number" class="form-control-plaintext" [(ngModel)]="transactionView.amount" #amount="ngModel" placeholder="€" id="amount" name="amount" required>
-                <div class="alert-danger" *ngIf="amount.invalid">Amount not valid!</div>                
+                <div class="alert-danger" *ngIf="amount.invalid">Amount not valid!</div>
             </div>
 
             <div class="form-group">

@@ -7,26 +7,29 @@ let AppComponent = class AppComponent {
         this.ngbModal = ngbModal;
         this.title = 'Outlay Manager Web APP';
         this.messageView = new MessageView();
-        this.messagesQueue = new Array();
         this.informationType = VerboseType.Information;
         this.errorType = VerboseType.Error;
+        this.modalRefActive = undefined;
+        this.queueMessages = new Array();
     }
     openModalMessage(message) {
-        this.messageView = message;
-        this.messagesQueue.unshift(this.ngbModal.open(this.modalContent, { centered: true }));
-        var a = this.ngbModal.open(this.modalContent, { centered: true });
-        console.log(a);
+        if (this.modalRefActive === undefined) {
+            this.messageView = message;
+            this.modalRefActive = this.ngbModal.open(this.modalContent, { centered: true, backdrop: 'static', keyboard: false });
+        }
+        else {
+            this.queueMessages.push(message);
+        }
     }
     closeModalMessage() {
-        var _a;
-        console.log(this.messagesQueue);
-        console.log(this.ngbModal.activeInstances.length);
-        //En el caso de tener varios modales abiertos habr�a que ir cerrando como cola LIFO
-        //Como se van guardando al final, siempre voy a eliminar el primero
-        if (this.messagesQueue.length > 0) {
-            (_a = this.messagesQueue.pop()) === null || _a === void 0 ? void 0 : _a.close();
+        var _a, _b;
+        if (this.queueMessages.length > 0) {
+            this.messageView = (_a = this.queueMessages.pop()) !== null && _a !== void 0 ? _a : new MessageView();
         }
-        console.log(this.messagesQueue);
+        else {
+            (_b = this.modalRefActive) === null || _b === void 0 ? void 0 : _b.close();
+            this.modalRefActive = undefined;
+        }
     }
 };
 __decorate([

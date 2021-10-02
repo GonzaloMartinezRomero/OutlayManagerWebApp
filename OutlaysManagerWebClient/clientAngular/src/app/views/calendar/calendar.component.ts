@@ -2,10 +2,11 @@
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { DetailTransaction, TransactionDTO } from "../../model/TransactionDTO";
+import { DetailTransaction, TransactionDTO, Type } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+
 
 @Component(
     {
@@ -16,12 +17,21 @@ import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 
 export class Calendar implements OnInit {
 
+    private deleteConfirmationModalRef?: NgbModalRef = undefined;
+
+
+    public AdjustType: Type = Type.Adjust;
+    public IncomingType: Type = Type.Incoming;
+    public SpendType: Type = Type.Spending;
+
+    public  PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.svg";
+    public PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.svg";
+    public PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.svg";
+
     public transactionsCalendar: TransactionsCalendarContainer;
     public transactionView: TransactionDTO = new TransactionDTO();
     public transactionTypeArray: Array<string> = new Array<string>();
     public transactionCodesArray: Array<string> = new Array<string>();
-
-    private deleteConfirmationModalRef?: NgbModalRef = undefined;
 
     constructor(public calendarService: CalendarService, private outlayManagerService: OutlayManagerAPI, private modalABM: NgbModal,
                 private mainApp: AppComponent)
@@ -115,7 +125,8 @@ export class Calendar implements OnInit {
 
     public toTransactionView(transaction: TransactionDTO): string
     {
-        let transactionInfo = `[${transaction.detailTransaction.type.toString()}] ${transaction.detailTransaction.code}: ${transaction.amount}€`;
+        //let transactionInfo = `[${transaction.detailTransaction.type.toString()}] ${transaction.detailTransaction.code}: ${transaction.amount}€`;
+        let transactionInfo = `${transaction.detailTransaction.code}: ${transaction.amount}€`;
 
         return transactionInfo;
     }

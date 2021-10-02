@@ -82,6 +82,8 @@ export class CalendarService {
                             transactionAvailable.transactionArray = transactionsMap.get(dayNumber) ?? new Array<TransactionDTO>();
                         }
 
+                        transactionAvailable.isToday = this.isToday(year, month, dayNumber);                        
+
                         firstWeek.push(transactionAvailable);
                         dayNumber++;
                     }
@@ -114,6 +116,7 @@ export class CalendarService {
                             transactionAvailable.transactionArray = transactionsMap.get(dayNumber) ?? new Array<TransactionDTO>();
                         }
 
+                        transactionAvailable.isToday = this.isToday(year, month, dayNumber);
                         weekAux.push(transactionAvailable);                        
                         dayNumber++;
                     }
@@ -124,6 +127,14 @@ export class CalendarService {
                 this.transactionsCalendar.matrixCalendar.push(weekAux);
             }
         }
+
+    }
+
+    private isToday(year: number, month: number, dayNumber: number): boolean {
+
+        var today: Date = new Date(Date.now());
+
+        return today.getFullYear() === year && today.getMonth() === (month - 1) && today.getDate() === dayNumber;
     }
      
 }

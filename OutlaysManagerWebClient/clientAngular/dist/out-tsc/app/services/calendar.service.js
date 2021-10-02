@@ -10,7 +10,7 @@ let CalendarService = class CalendarService {
     loadTransactionsCalendar(year, month) {
         this.outlayManagerAPI.loadTransactions(year, month)
             .subscribe(response => {
-            let transactionsMap = new Map();
+            var transactionsMap = new Map();
             response.forEach(transactionAux => {
                 var _a;
                 var day = new Date(transactionAux.date).getDate();
@@ -18,7 +18,7 @@ let CalendarService = class CalendarService {
                     (_a = transactionsMap.get(day)) === null || _a === void 0 ? void 0 : _a.push(transactionAux);
                 }
                 else {
-                    let array = new Array();
+                    var array = new Array();
                     array.push(transactionAux);
                     transactionsMap.set(day, array);
                 }
@@ -54,6 +54,7 @@ let CalendarService = class CalendarService {
                         if (transactionsMap.has(dayNumber)) {
                             transactionAvailable.transactionArray = (_a = transactionsMap.get(dayNumber)) !== null && _a !== void 0 ? _a : new Array();
                         }
+                        transactionAvailable.isToday = this.isToday(year, month, dayNumber);
                         firstWeek.push(transactionAvailable);
                         dayNumber++;
                     }
@@ -76,6 +77,7 @@ let CalendarService = class CalendarService {
                         if (transactionsMap.has(dayNumber)) {
                             transactionAvailable.transactionArray = (_b = transactionsMap.get(dayNumber)) !== null && _b !== void 0 ? _b : new Array();
                         }
+                        transactionAvailable.isToday = this.isToday(year, month, dayNumber);
                         weekAux.push(transactionAvailable);
                         dayNumber++;
                     }
@@ -84,6 +86,10 @@ let CalendarService = class CalendarService {
                 this.transactionsCalendar.matrixCalendar.push(weekAux);
             }
         }
+    }
+    isToday(year, month, dayNumber) {
+        var today = new Date(Date.now());
+        return today.getFullYear() === year && today.getMonth() === (month - 1) && today.getDate() === dayNumber;
     }
 };
 CalendarService = __decorate([

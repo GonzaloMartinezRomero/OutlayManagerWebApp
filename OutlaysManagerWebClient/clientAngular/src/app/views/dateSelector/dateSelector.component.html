@@ -1,14 +1,14 @@
 ﻿<div class="border">
     <form class="form-inline">
         <div class="form-group">
-            <label class="ml-2">Select Year</label>
-            <select class="form-control ml-2" [(ngModel)]="year">
+            <label class="ml-2">Select Year</label>     
+            <select class="form-control ml-2" [(ngModel)]="yearView" id="year" name="year">                                
                 <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
             </select>
         </div>
         <div class="form-group ml-4">
             <label class="ml-2">Select Month</label>
-            <select class="form-control ml-2" [(ngModel)]="monthView">
+            <select class="form-control ml-2" [(ngModel)]="monthView"  id="month" name="month">
                 <option *ngFor="let monthAux of monthsNamesMap.keys()">{{monthAux}}</option>
             </select>
         </div>

@@ -21,29 +21,32 @@ let DateSelector = class DateSelector {
             ["Diciembre", 12],
         ]);
         this.yearsAvailables = new Array();
-        var today = new Date();
-        this.year = today.getFullYear().toString();
-        this.month = today.getMonth().toString();
+        this.yearView = "";
+        this.monthView = "";
     }
     ngOnInit() {
         this.outlayManagerAPI.loadYearsAvailabes()
             .subscribe(response => {
             this.yearsAvailables = response;
-            //Cargar el año siguiente al ultimo año
-            this.yearsAvailables.push(this.yearsAvailables[this.yearsAvailables.length - 1] + 1);
-        }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables")); });
-        this.updateCalendar();
+            this.loadCurrentDateToView();
+        }, error => {
+            this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
+        });
     }
     updateCalendar() {
-        const yearNormalized = parseInt(this.year);
-        const monthNormalized = this.monthsNamesMap.get(this.month);
         try {
+            var yearNormalized = parseInt(this.yearView);
+            var monthNormalized = this.monthsNamesMap.get(this.monthView);
+            if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
+                throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
+            }
             this.calendarService.loadTransactionsCalendar(yearNormalized, monthNormalized);
         }
         catch (exception) {
             var messageView = new MessageView();
             messageView.action = "Calendar Builder";
             messageView.titleError = exception.toString();
+            messageView.verbose = VerboseType.Error;
             this.mainApp.openModalMessage(messageView);
         }
     }
@@ -55,6 +58,20 @@ let DateSelector = class DateSelector {
         messageView.statusCode = error.StatusCode;
         messageView.verbose = VerboseType.Error;
         return messageView;
+    }
+    loadCurrentDateToView() {
+        var today = new Date(Date.now());
+        var currentYear = today.getFullYear();
+        if (!this.yearsAvailables.find(value => value === currentYear)) {
+            this.yearsAvailables.push(currentYear);
+        }
+        this.yearView = currentYear.toString();
+        var currentMonth = today.getMonth() + 1;
+        this.monthsNamesMap.forEach((value, key) => {
+            if (value === currentMonth) {
+                this.monthView = key;
+            }
+        });
     }
 };
 DateSelector = __decorate([

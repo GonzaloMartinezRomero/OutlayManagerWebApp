@@ -21,4 +21,8 @@
     </TypeScriptCompile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="clientAngular\src\assets\img\" />
+  </ItemGroup>
+
 </Project>
