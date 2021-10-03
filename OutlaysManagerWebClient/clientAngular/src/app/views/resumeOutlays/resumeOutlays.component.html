@@ -11,10 +11,28 @@
         <tr>
             <td> <p>{{incomingView}}€</p></td>
             <td> <p>{{expensesView}}€</p></td>
-            <td> <p>{{savingView}}€</p></td>
-        </tr>
+            <td>
+                <div *ngIf="isGreaterThanZero(savingView)">
+                    <p>{{savingView}}€ <span><img src="{{PATH_ARROW_UP}}" /></span> </p> 
+                </div>
+
+                <div *ngIf="!isGreaterThanZero(savingView)">
+                    <p>{{savingView}}€ <span><img src="{{PATH_ARROW_DOWN}}" /></span> </p>  
+                </div>
+            </td>
+        </tr>        
+</table>
+
+<table class="table table-bordered">
+    <thead> 
         <tr>
-            <th scope="row">Total Amount</th>
-            <td colspan="2"> <p>{{totalAmountView}}€</p></td>
+            <th scope="col">Total Amount</th>
         </tr>
+    
+    </thead>
+    <tbody>
+        <tr>            
+            <td> <p>{{totalAmountView}}€</p></td>
+        </tr>
+    </tbody>
 </table>

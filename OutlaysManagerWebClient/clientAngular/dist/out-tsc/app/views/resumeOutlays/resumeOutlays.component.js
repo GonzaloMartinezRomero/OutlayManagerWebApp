@@ -9,18 +9,20 @@ let ResumeOutlays = class ResumeOutlays {
         this.expensesView = "0";
         this.savingView = "0";
         this.totalAmountView = "0";
-        this.DEC_NUMBER = 2;
+        this.PATH_ARROW_UP = "clientAngular/assets/img/arrowUp.svg";
+        this.PATH_ARROW_DOWN = "clientAngular/assets/img/arrowDown.svg";
         this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
             this.loadResume(transactionCalendarMatrix);
+            this.loadTotalAmount();
         });
     }
     ngOnInit() {
         this.loadTotalAmount();
     }
     loadResume(transactionCalendarMatrix) {
-        var incoming = 0;
-        var expenses = 0;
-        var saving = 0;
+        var incoming = 0.0;
+        var expenses = 0.0;
+        var saving = 0.0;
         for (let week of transactionCalendarMatrix) {
             for (let transactionsDay of week) {
                 for (let transactionAux of transactionsDay.transactionArray) {
@@ -39,13 +41,19 @@ let ResumeOutlays = class ResumeOutlays {
             }
         }
         saving = incoming - expenses;
-        this.incomingView = Math.round(incoming).toFixed(this.DEC_NUMBER);
-        this.expensesView = Math.round(expenses).toFixed(this.DEC_NUMBER);
-        this.savingView = Math.round(saving).toFixed(this.DEC_NUMBER);
-        this.loadTotalAmount();
+        this.incomingView = this.toEuroString(incoming);
+        this.expensesView = this.toEuroString(expenses);
+        this.savingView = this.toEuroString(saving);
+    }
+    isGreaterThanZero(amount) {
+        var valueCero = 0.0;
+        var value = Number(amount);
+        console.log(value);
+        console.log(value > valueCero);
+        return value > valueCero;
     }
     loadTotalAmount() {
-        var totalAmount = 0;
+        var totalAmount = 0.0;
         this.apiService.loadAllTransactions().subscribe(values => {
             values.forEach(transactionAux => {
                 switch (transactionAux.detailTransaction.type) {
@@ -60,8 +68,13 @@ let ResumeOutlays = class ResumeOutlays {
                         break;
                 }
             });
-            this.totalAmountView = Math.round(totalAmount).toFixed(this.DEC_NUMBER);
+            this.totalAmountView = this.toEuroString(totalAmount);
         });
+    }
+    toEuroString(amount) {
+        var amountRounded = Math.round(amount * 100) / 100;
+        var amountParsed = amountRounded.toLocaleString("de-DE");
+        return amountParsed;
     }
 };
 ResumeOutlays = __decorate([

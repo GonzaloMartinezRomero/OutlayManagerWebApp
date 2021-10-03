@@ -1,4 +1,5 @@
 ﻿import { Component, Injectable, OnInit } from "@angular/core";
+import { createVoidZero } from "typescript";
 import { Type } from "../../model/TransactionDTO";
 import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { CalendarService } from "../../services/calendar.service";
@@ -16,14 +17,16 @@ export class ResumeOutlays implements OnInit {
     public incomingView: string = "0";
     public expensesView: string = "0";
     public savingView: string = "0";
-    public totalAmountView: string = "0";    
+    public totalAmountView: string = "0";
 
-    private readonly DEC_NUMBER: number = 2;
+    public PATH_ARROW_UP: string = "clientAngular/assets/img/arrowUp.svg";
+    public PATH_ARROW_DOWN: string = "clientAngular/assets/img/arrowDown.svg";
 
     constructor(private calendarService: CalendarService, private apiService: OutlayManagerAPI) {
 
         this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
-            this.loadResume(transactionCalendarMatrix)
+            this.loadResume(transactionCalendarMatrix);
+            this.loadTotalAmount();
         });
     }
 
@@ -33,9 +36,9 @@ export class ResumeOutlays implements OnInit {
 
     public loadResume(transactionCalendarMatrix: TransacionCalendar[][]):void {
 
-        var incoming:number = 0;
-        var expenses:number = 0;
-        var saving: number = 0;
+        var incoming:number = 0.0;
+        var expenses:number = 0.0;
+        var saving: number = 0.0;
 
         for (let week of transactionCalendarMatrix) {
             for (let transactionsDay of week) {
@@ -58,16 +61,22 @@ export class ResumeOutlays implements OnInit {
 
         saving = incoming - expenses;
 
-        this.incomingView = Math.round(incoming).toFixed(this.DEC_NUMBER);
-        this.expensesView = Math.round(expenses).toFixed(this.DEC_NUMBER);
-        this.savingView = Math.round(saving).toFixed(this.DEC_NUMBER);
+        this.incomingView = this.toEuroString(incoming);
+        this.expensesView = this.toEuroString(expenses);
+        this.savingView = this.toEuroString(saving);          
+    }
 
-        this.loadTotalAmount();      
+    public isGreaterThanZero(amount: string): boolean {
+
+        var valueCero: number = 0.0;
+        var value: number = parseFloat(amount);
+
+        return value > valueCero;
     }
 
     private loadTotalAmount() {
 
-        var totalAmount: number = 0;
+        var totalAmount: number = 0.0;
 
         this.apiService.loadAllTransactions().subscribe(values => {
             values.forEach(transactionAux => {
@@ -83,12 +92,17 @@ export class ResumeOutlays implements OnInit {
                         totalAmount -= transactionAux.amount;
                         break;
                 }
-
             });
 
-            this.totalAmountView = Math.round(totalAmount).toFixed(this.DEC_NUMBER);
+            this.totalAmountView = this.toEuroString(totalAmount);
         })
-
     }
 
+    private toEuroString(amount: number): string {
+
+        var amountRounded: number = Math.round(amount * 100) / 100;
+        var amountParsed: string = amountRounded.toLocaleString("de-DE");
+
+        return amountParsed;
+    }
 }

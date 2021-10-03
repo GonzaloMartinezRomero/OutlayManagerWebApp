@@ -24,9 +24,9 @@ export class Calendar implements OnInit {
     public IncomingType: Type = Type.Incoming;
     public SpendType: Type = Type.Spending;
 
-    public  PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.svg";
-    public PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.svg";
-    public PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.svg";
+    public  PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.png";
+    public PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.png";
+    public PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.png";
 
     public transactionsCalendar: TransactionsCalendarContainer;
     public transactionView: TransactionDTO = new TransactionDTO();
