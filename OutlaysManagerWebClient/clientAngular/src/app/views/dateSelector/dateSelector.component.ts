@@ -1,5 +1,5 @@
-﻿import { Component, OnInit } from "@angular/core";
-import { toInteger } from "@ng-bootstrap/ng-bootstrap/util/util";
+﻿import { AfterViewChecked } from "@angular/core";
+import { Component, Injectable, OnInit } from "@angular/core";
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { CalendarService } from "../../services/calendar.service";
@@ -12,22 +12,23 @@ import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
     }
 )
 
+@Injectable()
 export class DateSelector implements OnInit {
 
     public monthsNamesMap: Map<string, number> = new Map<string, number>(
         [
-            ["Enero", 1],
-            ["Febrero", 2],
-            ["Marzo", 3],
-            ["Abril", 4],
-            ["Mayo", 5],
-            ["Junio", 6],
-            ["Julio", 7],
-            ["Agosto", 8],
-            ["Septiembre", 9],
-            ["Octubre", 10],
-            ["Noviembre", 11],
-            ["Diciembre", 12],
+            ["January", 1],
+            ["Febrary", 2],
+            ["March", 3],
+            ["April", 4],
+            ["May", 5],
+            ["Juny", 6],
+            ["July", 7],
+            ["Agost", 8],
+            ["September", 9],
+            ["October", 10],
+            ["November", 11],
+            ["December", 12],
         ]);
 
     public yearsAvailables: Array<number> = new Array<number>();
@@ -45,10 +46,11 @@ export class DateSelector implements OnInit {
             {
                 this.yearsAvailables = response;
                 this.loadCurrentDateToView();
+                this.updateCalendar();
 
             }, error => {
                 this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
-            });       
+            });        
     }
 
     public updateCalendar():void {

@@ -3,20 +3,11 @@ export class TransactionDTO {
         this.id = 0;
         this.amount = 0;
         this.date = new Date();
-        this.detailTransaction = new DetailTransaction();
-    }
-}
-export class DetailTransaction {
-    constructor() {
-        this.code = "";
         this.description = "";
-        this.type = Type.Adjust;
+        this.codeTransactionID = 0;
+        this.codeTransaction = "";
+        this.typeTransactionID = 0;
+        this.typeTransaction = "";
     }
 }
-export var Type;
-(function (Type) {
-    Type["Adjust"] = "ADJUST";
-    Type["Incoming"] = "INCOMING";
-    Type["Spending"] = "SPENDING";
-})(Type || (Type = {}));
 //# sourceMappingURL=TransactionDTO.js.map

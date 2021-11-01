@@ -1,7 +1,7 @@
-import { ViewChild } from '@angular/core';
-import { Component, Injectable } from '@angular/core';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewChecked, Component, Injectable, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessageView, VerboseType } from './model/MessageView';
+import { DateSelector } from './views/dateSelector/dateSelector.component';
 
 @Component({
     selector: 'OutlayManagerMainPage',
@@ -9,7 +9,7 @@ import { MessageView, VerboseType } from './model/MessageView';
 })
 
 @Injectable()
-export class AppComponent {
+export class AppComponent{
 
     //Carga el contenido del modal usando la etiqueta
     @ViewChild('modalMessage') private modalContent: any;
@@ -21,7 +21,7 @@ export class AppComponent {
     private modalRefActive?: NgbModalRef = undefined;
     private queueMessages: Array<MessageView> = new Array<MessageView>();
 
-    constructor(private ngbModal: NgbModal) {        
+    constructor(private ngbModal: NgbModal) {
     }
 
     public openModalMessage(message: MessageView): void {
@@ -33,7 +33,7 @@ export class AppComponent {
         }
         else
         {
-            this.queueMessages.push(message);
+            this.queueMessages.push(message); 
         }
     }
 

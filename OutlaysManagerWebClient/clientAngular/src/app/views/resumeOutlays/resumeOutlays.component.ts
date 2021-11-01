@@ -1,7 +1,6 @@
-﻿import { Component, Injectable, OnInit } from "@angular/core";
-import { createVoidZero } from "typescript";
-import { Type } from "../../model/TransactionDTO";
-import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
+﻿import { Component, OnInit } from "@angular/core";
+import { TransacionCalendar } from "../../model/TransactionsCalendarContainer";
+import { TransactionTypes } from "../../model/TransactionTypes";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 
@@ -43,15 +42,15 @@ export class ResumeOutlays implements OnInit {
         for (let week of transactionCalendarMatrix) {
             for (let transactionsDay of week) {
                 for (let transactionAux of transactionsDay.transactionArray) {
-                    switch (transactionAux.detailTransaction.type) {
+                    switch (transactionAux.typeTransaction) {
 
-                        case Type.Incoming:
+                        case TransactionTypes.INCOMING:
                             incoming += transactionAux.amount;
                             break;
-                        case Type.Adjust:
+                        case TransactionTypes.ADJUST:
                             incoming += transactionAux.amount;
                             break;
-                        case Type.Spending:
+                        case TransactionTypes.SPENDING:
                             expenses += transactionAux.amount;
                             break;
                     }
@@ -80,15 +79,15 @@ export class ResumeOutlays implements OnInit {
 
         this.apiService.loadAllTransactions().subscribe(values => {
             values.forEach(transactionAux => {
-                switch (transactionAux.detailTransaction.type) {
+                switch (transactionAux.typeTransaction) {
 
-                    case Type.Incoming:
+                    case TransactionTypes.INCOMING:
                         totalAmount += transactionAux.amount;
                         break;
-                    case Type.Adjust:
+                    case TransactionTypes.ADJUST:
                         totalAmount += transactionAux.amount;
                         break;
-                    case Type.Spending:
+                    case TransactionTypes.SPENDING:
                         totalAmount -= transactionAux.amount;
                         break;
                 }

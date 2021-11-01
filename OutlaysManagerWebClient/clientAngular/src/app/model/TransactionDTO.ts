@@ -2,22 +2,13 @@
     id: number = 0 ;
     amount: number = 0;
     date: Date = new Date();
-    detailTransaction: DetailTransaction = new DetailTransaction();
+    description: string = "";
+    codeTransactionID: number = 0;
+    codeTransaction: string = "";
+    typeTransactionID: number = 0;
+    typeTransaction: string = "";
 
     constructor() {
 
     }
 }
-
-export class DetailTransaction {
-    code: string ="";
-    description: string = "";
-    type: Type = Type.Adjust;
-}
-
-export enum Type {
-    Adjust = "ADJUST",
-    Incoming = "INCOMING",
-    Spending = "SPENDING",
-}
-

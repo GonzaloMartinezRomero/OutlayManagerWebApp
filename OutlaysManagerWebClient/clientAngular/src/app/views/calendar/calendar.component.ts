@@ -2,8 +2,11 @@
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { DetailTransaction, TransactionDTO, Type } from "../../model/TransactionDTO";
+import { TransactionCodeDTO } from "../../model/TransactionCodeDTO";
+import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
+import { TransactionTypes } from "../../model/TransactionTypes";
+import { TypeTransactionDTO } from "../../model/TypeTransactionDTO";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 
@@ -18,20 +21,22 @@ import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 export class Calendar implements OnInit {
 
     private deleteConfirmationModalRef?: NgbModalRef = undefined;
+    private setupModalTransactionTypeRef?: NgbModalRef = undefined;
 
+    public readonly AdjustType: string = TransactionTypes.ADJUST;
+    public readonly IncomingType: string = TransactionTypes.INCOMING;
+    public readonly SpendType: string = TransactionTypes.SPENDING;
 
-    public AdjustType: Type = Type.Adjust;
-    public IncomingType: Type = Type.Incoming;
-    public SpendType: Type = Type.Spending;
-
-    public  PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.png";
-    public PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.png";
-    public PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.png";
+    public readonly PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.png";
+    public readonly PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.png";
+    public readonly PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.png";
 
     public transactionsCalendar: TransactionsCalendarContainer;
     public transactionView: TransactionDTO = new TransactionDTO();
-    public transactionTypeArray: Array<string> = new Array<string>();
-    public transactionCodesArray: Array<string> = new Array<string>();
+    public transactionTypeMap: Map<string, TypeTransactionDTO> = new Map<string,TypeTransactionDTO>();
+    public transactionCodesMap: Map<string,TransactionCodeDTO> = new Map<string,TransactionCodeDTO>();
+
+    public newCodeTransaction: string = "";
 
     constructor(public calendarService: CalendarService, private outlayManagerService: OutlayManagerAPI, private modalABM: NgbModal,
                 private mainApp: AppComponent)
@@ -43,14 +48,14 @@ export class Calendar implements OnInit {
 
         this.outlayManagerService.loadTransactionTypeOutlays()
             .subscribe(response => {
-                this.transactionTypeArray = response;
+                var arrayTypeTransaction: Array<TypeTransactionDTO> = response;
+
+                this.transactionTypeMap = new Map<string, TypeTransactionDTO>();
+                arrayTypeTransaction.forEach(x => this.transactionTypeMap.set(x.type, x));
+
             }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error,"Load transaction type outlays")); });
 
-
-        this.outlayManagerService.loadCodeListTransactions()
-            .subscribe(response => {
-                this.transactionCodesArray = response;
-            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load code list transactions"));  });
+        this.loadCodeListTransactions();
     }
 
     public openTransactionConfigModal(modalTemplate: any, transaction: TransactionDTO | undefined, day: number | undefined) {
@@ -78,19 +83,28 @@ export class Calendar implements OnInit {
         this.deleteConfirmationModalRef = this.modalABM.open(modalTemplate);
     }
 
-    public save() {
+    public save():void {
 
         const operationType: string = "Saving Transaction";
+
+        var transactionCodeID: number = this.transactionCodesMap.get(this.transactionView.codeTransaction)?.id ?? 0;
+        if (transactionCodeID === 0)
+            throw new Error("Internal Error: Transaction code ID not defined!");
+
+        var transactionTypeID: number = this.transactionTypeMap.get(this.transactionView.typeTransaction)?.id ?? 0;
+        if (transactionTypeID === 0)
+            throw new Error("Internal Error: Transaction type ID not defined!");
+
+        this.transactionView.codeTransactionID = transactionCodeID;
+        this.transactionView.typeTransactionID = transactionTypeID;
 
         this.outlayManagerService.saveTransaction(this.transactionView)
             .subscribe(response => {
 
                 this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
-
-
                 this.closeTransactionConfigurationModal();
-
                 this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
+
             },
                 error => {
                     this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, operationType));
@@ -124,11 +138,67 @@ export class Calendar implements OnInit {
     }
 
     public toTransactionView(transaction: TransactionDTO): string
-    {
-        //let transactionInfo = `[${transaction.detailTransaction.type.toString()}] ${transaction.detailTransaction.code}: ${transaction.amount}€`;
-        let transactionInfo = `${transaction.detailTransaction.code}: ${transaction.amount}€`;
+    {   
+        let transactionInfo = `${transaction.codeTransaction}: ${transaction.amount}€`;
 
         return transactionInfo;
+    }
+
+    public openSetupTransactionTypes(modalSetupTransactionType: any) {
+
+        this.setupModalTransactionTypeRef = this.modalABM.open(modalSetupTransactionType, { scrollable:true });
+    }
+
+    public closeModalSetupTransactions() {
+
+        this.setupModalTransactionTypeRef?.close();
+        this.setupModalTransactionTypeRef = undefined;
+    }
+
+    public deleteTransactionCode(codeID: number) {
+
+        if (codeID > 0)
+            this.outlayManagerService.deleteTransactionCode(codeID)
+                .subscribe(response => {
+                    
+                    this.loadCodeListTransactions();
+
+                }, error => {
+                    
+                    this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Delete code transaction"));
+                });
+    }
+
+    public addTransactionCode(codeTransaction: string) {
+
+        if (codeTransaction?.length > 0) {
+
+            this.outlayManagerService.addTransactionCode(codeTransaction)
+                .subscribe(response => {                    
+                    this.loadCodeListTransactions();
+                    this.newCodeTransaction = "";
+                }, error => {
+                  
+                    this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Add code transaction"));
+                });
+
+        } else {
+
+            this.mainApp.openModalMessage(this.buildMessageError("Transaction code is empty!", "Add transaction code"));
+        }
+    }
+
+    private loadCodeListTransactions():void {
+
+        this.outlayManagerService.loadCodeListTransactions()
+            .subscribe(response => {
+
+                var transactionCodeArray: Array<TransactionCodeDTO> = response;
+
+                this.transactionCodesMap = new Map<string, TransactionCodeDTO>();
+                transactionCodeArray.forEach(x => this.transactionCodesMap.set(x.code, x));
+
+            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load code list transactions")); });
     }
 
     private copyTransaction(transaction: TransactionDTO): TransactionDTO {
@@ -138,11 +208,11 @@ export class Calendar implements OnInit {
         transactionCopy.amount = transaction.amount
         transactionCopy.date = transaction.date
 
-        transactionCopy.detailTransaction = new DetailTransaction();
-
-        transactionCopy.detailTransaction.code = transaction.detailTransaction.code;
-        transactionCopy.detailTransaction.description = transaction.detailTransaction.description;
-        transactionCopy.detailTransaction.type = transaction.detailTransaction.type;
+        transactionCopy.description = transaction.description;
+        transactionCopy.codeTransactionID = transaction.codeTransactionID;
+        transactionCopy.codeTransaction = transaction.codeTransaction;
+        transactionCopy.typeTransaction = transaction.typeTransaction;
+        transactionCopy.typeTransactionID = transaction.typeTransactionID;
 
         return transactionCopy;
     }
@@ -155,6 +225,19 @@ export class Calendar implements OnInit {
         messageView.titleError = error.Message;
         messageView.detail = "Calling EndPoint: "+error.EndPoint;
         messageView.statusCode = error.StatusCode;
+        messageView.verbose = VerboseType.Error;
+
+        return messageView;
+    }
+
+    private buildMessageError(error:string,action:string) {
+
+        var messageView = new MessageView();
+
+        messageView.action = action;
+        messageView.titleError = error;
+        messageView.detail = "";
+        messageView.statusCode = "";
         messageView.verbose = VerboseType.Error;
 
         return messageView;

@@ -26,7 +26,7 @@ import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
   providers: [
       CalendarService,
       OutlayManagerAPI,
-      AppComponent
+      AppComponent     
   ],
     bootstrap: [AppComponent]
     

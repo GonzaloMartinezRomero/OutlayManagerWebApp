@@ -4,7 +4,9 @@ import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { ExceptionAPI } from "../model/ExceptionAPI";
 import { ResponseTransactionAPI } from "../model/ResponseTransactionAPI";
+import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
 import { TransactionDTO } from "../model/TransactionDTO";
+import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
 
 @Injectable()
 export class OutlayManagerAPI {
@@ -19,7 +21,7 @@ export class OutlayManagerAPI {
 
     public loadAllTransactions(): Observable<TransactionDTO[]> {
 
-        var endPoint: string = this.HOST + "Outlay/All";
+        var endPoint: string = this.HOST + "Transaction/All";
 
         return this.httpClient.get<TransactionDTO[]>(endPoint)
             .pipe(catchError((ex: any) => {
@@ -31,7 +33,7 @@ export class OutlayManagerAPI {
 
     public loadTransactions(year: number, month: number): Observable<TransactionDTO[]>
     {   
-        var endPoint: string = this.HOST + "Outlay?year=" + year + "&month=" + month;
+        var endPoint: string = this.HOST + "Transaction?year=" + year + "&month=" + month;
 
         return this.httpClient.get<TransactionDTO[]>(endPoint)
             .pipe(catchError((ex: any) => {
@@ -43,7 +45,7 @@ export class OutlayManagerAPI {
 
     public saveTransaction(transaction: TransactionDTO): Observable<ResponseTransactionAPI> {
 
-        var CRUDOperationURL = this.HOST + "Outlay";
+        var CRUDOperationURL = this.HOST + "Transaction";
         let transactionJSON = this.transactionToJSON(transaction);
         let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding" : "gzip,deflate,br"};        
 
@@ -69,7 +71,7 @@ export class OutlayManagerAPI {
 
     public deleteTransaction(transactionID: number): Observable<ResponseTransactionAPI> {
 
-        var deleteTransactionURL = this.HOST + "Outlay" + "/" + transactionID;
+        var deleteTransactionURL = this.HOST + "Transaction" + "/" + transactionID;
         let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
 
         return this.httpClient.delete<ResponseTransactionAPI>(deleteTransactionURL, { headers: customHeader })
@@ -81,12 +83,12 @@ export class OutlayManagerAPI {
     
     }
 
-    public loadTransactionTypeOutlays():Observable<Array<string>> {
+    public loadTransactionTypeOutlays(): Observable<Array<TypeTransactionDTO>> {
 
-        var endPoint = "OutlayInfo/TypeOutlays";
+        var endPoint = "TransactionInfo/TransactionTypes";
         var requestURLParams = this.HOST + endPoint;
 
-        return this.httpClient.get<string[]>(requestURLParams)
+        return this.httpClient.get<TypeTransactionDTO[]>(requestURLParams)
                               .pipe(catchError((e: any) => {
                               
                                   var exception = this.buildExceptionMessage(e, endPoint);
@@ -94,12 +96,12 @@ export class OutlayManagerAPI {
                               }));
     }
 
-    public loadCodeListTransactions(): Observable<Array<string>> {
+    public loadCodeListTransactions(): Observable<Array<TransactionCodeDTO>> {
 
-        var endPoint = "OutlayInfo/CodeList";
+        var endPoint = "TransactionInfo/TransactionCodes";
         var requestURLParams = this.HOST + endPoint;
 
-        return this.httpClient.get<string[]>(requestURLParams)
+        return this.httpClient.get<TransactionCodeDTO[]>(requestURLParams)
             .pipe(catchError((e: any) => {
 
                 var exception = this.buildExceptionMessage(e, endPoint);
@@ -109,7 +111,7 @@ export class OutlayManagerAPI {
 
     public loadYearsAvailabes(): Observable<Array<number>> {
 
-        var endPoint = "OutlayInfo/YearsAvailabes";
+        var endPoint = "TransactionInfo/YearsAvailabes";
         var requestURLParams = this.HOST + endPoint;
 
         return this.httpClient.get<number[]>(requestURLParams)
@@ -120,7 +122,34 @@ export class OutlayManagerAPI {
                               }));
     }
 
-    public buildExceptionMessage(exceptionAPI: any, endPoint: string): ExceptionAPI {
+    public deleteTransactionCode(transactionCodeID: number): Observable<any> {
+
+        var deleteTransactionCodeURL = this.HOST + "Transaction/TransactionCode/" + transactionCodeID;
+        let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
+
+        return this.httpClient.delete<any>(deleteTransactionCodeURL, { headers: customHeader })
+            .pipe(catchError((e: any) => {
+
+                var exception = this.buildExceptionMessage(e, "DeleteTransactionCode");
+                throw exception;
+            }));
+    }
+
+    public addTransactionCode(transactionCode: string):Observable<any> {
+
+        var endPoint = this.HOST + "Transaction/TransactionCode";
+        let transactionCodeJSON = this.transactionCodeToJSON(transactionCode);
+        let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
+
+        return this.httpClient.post<ResponseTransactionAPI>(endPoint, transactionCodeJSON, { headers: customHeader })
+            .pipe(catchError((e: any) => {
+
+                var exception = this.buildExceptionMessage(e, "Add Transaction Code");
+                throw exception;
+            }));
+    }
+
+    private buildExceptionMessage(exceptionAPI: any, endPoint: string): ExceptionAPI {
 
         var exception = new ExceptionAPI();
         exception.EndPoint = endPoint;
@@ -129,6 +158,12 @@ export class OutlayManagerAPI {
         switch (exceptionAPI.status) {
             case 0:
                 exception.Message = "API service not available calling to " + this.HOST;
+                break;
+            case 500:
+                exception.Message = exceptionAPI.error;
+                break;
+            case 404:
+                exception.Message = "Not Found";
                 break;
             default:
                 exception.Message = exceptionAPI.toString();
@@ -145,6 +180,11 @@ export class OutlayManagerAPI {
         return JSON.stringify(transactionJSON);
     }
 
+    private transactionCodeToJSON(transactionCode: string): string{
+
+        var transactionCodeJSON: TransactionCodeDTO = new TransactionCodeJSON(transactionCode);
+        return JSON.stringify(transactionCodeJSON);
+    }
 }
 
 class TransactionJSON {
@@ -152,16 +192,21 @@ class TransactionJSON {
     id: number = 0;
     amount: number = 0;
     date: string = "";
-    detailTransaction: DetailTransactionJSON = new DetailTransactionJSON();
-   
+    description: string = "";
+    codeTransactionID: number = 0;
+    codeTransaction: string = "";
+    typeTransactionID: number = 0;
+    typeTransaction: string = "";
 
     constructor(transaction: TransactionDTO) {
         this.id = transaction.id;
         this.amount = transaction.amount;
         this.date = this.toLocalTime(transaction.date);
-        this.detailTransaction.code = transaction.detailTransaction.code;
-        this.detailTransaction.description = transaction.detailTransaction.description;
-        this.detailTransaction.type = transaction.detailTransaction.type;
+        this.description = transaction.description;
+        this.codeTransactionID = transaction.codeTransactionID;
+        this.codeTransaction = transaction.codeTransaction;
+        this.typeTransaction = transaction.typeTransaction;
+        this.typeTransactionID = transaction.typeTransactionID;
     }
 
     private toLocalTime(date: Date): string {
@@ -181,8 +226,13 @@ class TransactionJSON {
     }
 }
 
-class DetailTransactionJSON {
+class TransactionCodeJSON {
+    id: number = 0;
     code: string = "";
-    description: string = "";
-    type: string = "";
+
+    constructor(_code: string) {
+        this.code = _code;
+    }
 }
+
+

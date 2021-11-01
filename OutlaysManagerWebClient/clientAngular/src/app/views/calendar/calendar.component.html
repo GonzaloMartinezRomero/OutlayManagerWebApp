@@ -35,7 +35,7 @@
                                 <th>
                                     <div class="list-group">
                                         <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
-                                            <div [ngSwitch]="transactionAux.detailTransaction.type">
+                                            <div [ngSwitch]="transactionAux.typeTransaction">
                                                 <div *ngSwitchCase="AdjustType">
                                                     <img src="{{PATH_IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
                                                 </div>
@@ -78,30 +78,32 @@
         <div class="modal-body">
 
             <div class="form-group">
-                <label for="transactionType">Type</label>
-                <select class="form-control" [(ngModel)]="transactionView.detailTransaction.type" id="transactionType" name="transactionType" #transactionType="ngModel" required>
-                    <option *ngFor="let transactionType of transactionTypeArray">{{transactionType}}</option>
+                <label class="font-weight-bold" for="transactionType">Type</label>
+                <select class="form-control" [(ngModel)]="transactionView.typeTransaction" id="transactionType" name="transactionType" #transactionType="ngModel" required>
+                    <option *ngFor="let transactionType of transactionTypeMap | keyvalue">{{transactionType.value.type}}</option>
                 </select>
                 <div class="alert-danger" *ngIf="transactionType.invalid">Transaction type code not valid!</div>
             </div>
 
             <div class="form-group">
-                <label for="transactionCode">Code</label>
-                <select class="form-control" [(ngModel)]="transactionView.detailTransaction.code" id="transactionCode" name="transactionCode" #transactionCode="ngModel" required>
-                    <option *ngFor="let transactionCodeArrayAux of transactionCodesArray">{{transactionCodeArrayAux}}</option>
+                <label class="font-weight-bold" for="transactionCode">Code</label>
+                <select class="form-control" [(ngModel)]="transactionView.codeTransaction" id="transactionCode" name="transactionCode" #transactionCode="ngModel" required>
+                    <option *ngFor="let transactionCodeMapAux of transactionCodesMap | keyvalue">{{transactionCodeMapAux.value.code}}</option>
                 </select>
                 <div class="alert-danger" *ngIf="transactionCode.invalid">Transaction code not valid!</div>
+                <br>
+                <button type="submit" class="btn btn-outline-success" (click)="openSetupTransactionTypes(setupTransactionsType)">Setup</button>
             </div>
 
             <div class="form-group">
-                <label for="amount">Amount</label>
+                <label class="font-weight-bold" for="amount">Amount €</label>
                 <input type="number" class="form-control-plaintext" [(ngModel)]="transactionView.amount" #amount="ngModel" placeholder="€" id="amount" name="amount" required>
                 <div class="alert-danger" *ngIf="amount.invalid">Amount not valid!</div>
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control-plaintext" [(ngModel)]="transactionView.detailTransaction.description" placeholder="Text here" id="description" name="description">
+                <label class="font-weight-bold" for="description">Description</label>
+                <input type="text" class="form-control-plaintext" [(ngModel)]="transactionView.description" placeholder="Text here" id="description" name="description">
             </div>
 
         </div>
@@ -135,3 +137,35 @@
         <button type="button" class="btn btn-outline-success" (click)="responseDeleteTransaction(false)">No</button>
     </div>
 </ng-template>
+
+<ng-template #setupTransactionsType let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Setup Transactions Type</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModalSetupTransactions()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let codeAux of transactionCodesMap | keyvalue">
+                    <th scope="col"><p>{{codeAux.value.code}}</p></th>
+                    <th scope="col"><button type="submit" class="btn btn-outline-danger" (click)="deleteTransactionCode(codeAux.value.id)">Delete</button></th>
+                </tr>
+                <tr>
+                    <th scope="col"><input type="text" value="" name="codeTransactionInput" [(ngModel)]="newCodeTransaction"/></th>
+                    <th scope="col"><button type="submit" class="btn btn-outline-success" (click)="addTransactionCode(newCodeTransaction)">Add</button></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</ng-template>
+

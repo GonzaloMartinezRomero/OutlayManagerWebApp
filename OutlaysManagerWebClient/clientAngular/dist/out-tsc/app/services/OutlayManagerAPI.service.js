@@ -9,7 +9,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         this.listaTransacciones = new Array();
     }
     loadAllTransactions() {
-        var endPoint = this.HOST + "Outlay/All";
+        var endPoint = this.HOST + "Transaction/All";
         return this.httpClient.get(endPoint)
             .pipe(catchError((ex) => {
             var exception = this.buildExceptionMessage(ex, "Get all transactions");
@@ -17,7 +17,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadTransactions(year, month) {
-        var endPoint = this.HOST + "Outlay?year=" + year + "&month=" + month;
+        var endPoint = this.HOST + "Transaction?year=" + year + "&month=" + month;
         return this.httpClient.get(endPoint)
             .pipe(catchError((ex) => {
             var exception = this.buildExceptionMessage(ex, "Get transactions");
@@ -25,7 +25,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     saveTransaction(transaction) {
-        var CRUDOperationURL = this.HOST + "Outlay";
+        var CRUDOperationURL = this.HOST + "Transaction";
         let transactionJSON = this.transactionToJSON(transaction);
         let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
         if (transaction.id === 0) {
@@ -44,7 +44,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }
     }
     deleteTransaction(transactionID) {
-        var deleteTransactionURL = this.HOST + "Outlay" + "/" + transactionID;
+        var deleteTransactionURL = this.HOST + "Transaction" + "/" + transactionID;
         let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
         return this.httpClient.delete(deleteTransactionURL, { headers: customHeader })
             .pipe(catchError((e) => {
@@ -53,7 +53,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadTransactionTypeOutlays() {
-        var endPoint = "OutlayInfo/TypeOutlays";
+        var endPoint = "TransactionInfo/TransactionTypes";
         var requestURLParams = this.HOST + endPoint;
         return this.httpClient.get(requestURLParams)
             .pipe(catchError((e) => {
@@ -62,7 +62,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadCodeListTransactions() {
-        var endPoint = "OutlayInfo/CodeList";
+        var endPoint = "TransactionInfo/TransactionCodes";
         var requestURLParams = this.HOST + endPoint;
         return this.httpClient.get(requestURLParams)
             .pipe(catchError((e) => {
@@ -71,11 +71,30 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadYearsAvailabes() {
-        var endPoint = "OutlayInfo/YearsAvailabes";
+        var endPoint = "TransactionInfo/YearsAvailabes";
         var requestURLParams = this.HOST + endPoint;
         return this.httpClient.get(requestURLParams)
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, endPoint);
+            throw exception;
+        }));
+    }
+    deleteTransactionCode(transactionCodeID) {
+        var deleteTransactionCodeURL = this.HOST + "Transaction/TransactionCode/" + transactionCodeID;
+        let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
+        return this.httpClient.delete(deleteTransactionCodeURL, { headers: customHeader })
+            .pipe(catchError((e) => {
+            var exception = this.buildExceptionMessage(e, "DeleteTransactionCode");
+            throw exception;
+        }));
+    }
+    addTransactionCode(transactionCode) {
+        var endPoint = this.HOST + "Transaction/TransactionCode";
+        let transactionCodeJSON = this.transactionCodeToJSON(transactionCode);
+        let customHeader = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
+        return this.httpClient.post(endPoint, transactionCodeJSON, { headers: customHeader })
+            .pipe(catchError((e) => {
+            var exception = this.buildExceptionMessage(e, "Add Transaction Code");
             throw exception;
         }));
     }
@@ -87,6 +106,12 @@ let OutlayManagerAPI = class OutlayManagerAPI {
             case 0:
                 exception.Message = "API service not available calling to " + this.HOST;
                 break;
+            case 500:
+                exception.Message = exceptionAPI.error;
+                break;
+            case 404:
+                exception.Message = "Not Found";
+                break;
             default:
                 exception.Message = exceptionAPI.toString();
                 break;
@@ -96,6 +121,10 @@ let OutlayManagerAPI = class OutlayManagerAPI {
     transactionToJSON(transaction) {
         var transactionJSON = new TransactionJSON(transaction);
         return JSON.stringify(transactionJSON);
+    }
+    transactionCodeToJSON(transactionCode) {
+        var transactionCodeJSON = new TransactionCodeJSON(transactionCode);
+        return JSON.stringify(transactionCodeJSON);
     }
 };
 OutlayManagerAPI = __decorate([
@@ -107,13 +136,19 @@ class TransactionJSON {
         this.id = 0;
         this.amount = 0;
         this.date = "";
-        this.detailTransaction = new DetailTransactionJSON();
+        this.description = "";
+        this.codeTransactionID = 0;
+        this.codeTransaction = "";
+        this.typeTransactionID = 0;
+        this.typeTransaction = "";
         this.id = transaction.id;
         this.amount = transaction.amount;
         this.date = this.toLocalTime(transaction.date);
-        this.detailTransaction.code = transaction.detailTransaction.code;
-        this.detailTransaction.description = transaction.detailTransaction.description;
-        this.detailTransaction.type = transaction.detailTransaction.type;
+        this.description = transaction.description;
+        this.codeTransactionID = transaction.codeTransactionID;
+        this.codeTransaction = transaction.codeTransaction;
+        this.typeTransaction = transaction.typeTransaction;
+        this.typeTransactionID = transaction.typeTransactionID;
     }
     toLocalTime(date) {
         let year = new Date(date).getFullYear().toString();
@@ -126,11 +161,11 @@ class TransactionJSON {
         return `${year}-${month}-${day}T00:00:00Z`;
     }
 }
-class DetailTransactionJSON {
-    constructor() {
+class TransactionCodeJSON {
+    constructor(_code) {
+        this.id = 0;
         this.code = "";
-        this.description = "";
-        this.type = "";
+        this.code = _code;
     }
 }
 //# sourceMappingURL=OutlayManagerAPI.service.js.map

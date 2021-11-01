@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Component } from "@angular/core";
-import { Type } from "../../model/TransactionDTO";
+import { TransactionTypes } from "../../model/TransactionTypes";
 let ResumeOutlays = class ResumeOutlays {
     constructor(calendarService, apiService) {
         this.calendarService = calendarService;
@@ -26,14 +26,14 @@ let ResumeOutlays = class ResumeOutlays {
         for (let week of transactionCalendarMatrix) {
             for (let transactionsDay of week) {
                 for (let transactionAux of transactionsDay.transactionArray) {
-                    switch (transactionAux.detailTransaction.type) {
-                        case Type.Incoming:
+                    switch (transactionAux.typeTransaction) {
+                        case TransactionTypes.INCOMING:
                             incoming += transactionAux.amount;
                             break;
-                        case Type.Adjust:
+                        case TransactionTypes.ADJUST:
                             incoming += transactionAux.amount;
                             break;
-                        case Type.Spending:
+                        case TransactionTypes.SPENDING:
                             expenses += transactionAux.amount;
                             break;
                     }
@@ -47,23 +47,21 @@ let ResumeOutlays = class ResumeOutlays {
     }
     isGreaterThanZero(amount) {
         var valueCero = 0.0;
-        var value = Number(amount);
-        console.log(value);
-        console.log(value > valueCero);
+        var value = parseFloat(amount);
         return value > valueCero;
     }
     loadTotalAmount() {
         var totalAmount = 0.0;
         this.apiService.loadAllTransactions().subscribe(values => {
             values.forEach(transactionAux => {
-                switch (transactionAux.detailTransaction.type) {
-                    case Type.Incoming:
+                switch (transactionAux.typeTransaction) {
+                    case TransactionTypes.INCOMING:
                         totalAmount += transactionAux.amount;
                         break;
-                    case Type.Adjust:
+                    case TransactionTypes.ADJUST:
                         totalAmount += transactionAux.amount;
                         break;
-                    case Type.Spending:
+                    case TransactionTypes.SPENDING:
                         totalAmount -= transactionAux.amount;
                         break;
                 }
