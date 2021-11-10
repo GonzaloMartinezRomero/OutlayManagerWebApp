@@ -12,14 +12,14 @@ let ResumeOutlays = class ResumeOutlays {
         this.PATH_ARROW_UP = "clientAngular/assets/img/arrowUp.svg";
         this.PATH_ARROW_DOWN = "clientAngular/assets/img/arrowDown.svg";
         this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
-            this.loadResume(transactionCalendarMatrix);
+            this.loadMonthResume(transactionCalendarMatrix);
             this.loadTotalAmount();
         });
     }
     ngOnInit() {
         this.loadTotalAmount();
     }
-    loadResume(transactionCalendarMatrix) {
+    loadMonthResume(transactionCalendarMatrix) {
         var incoming = 0.0;
         var expenses = 0.0;
         var saving = 0.0;

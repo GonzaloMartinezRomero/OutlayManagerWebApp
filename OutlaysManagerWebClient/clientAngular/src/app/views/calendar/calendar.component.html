@@ -1,70 +1,80 @@
 ﻿<h3>Transactions Calendar</h3>
-
-<div *ngIf="transactionsCalendar.matrixCalendar.length == 0">
-    <h3 class="alert">Calendar is not loaded!</h3>
+<div class="container-fluid">
+    <div class="row">
+        <date-selector class="col-5"></date-selector>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="transactionsCalendar.matrixCalendar.length == 0">
+                <h3 class="alert">Calendar is not loaded!</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th *ngFor="let weekDayAux of transactionsCalendar.weekDays" scope="col" class="text-center">
+                            {{weekDayAux}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let week of transactionsCalendar.matrixCalendar">
+                        <th *ngFor="let transactionDayAux of week">
+                            <div *ngIf="transactionDayAux.isTransactionAvailable">
+                                <table class="table">
+                                    <thead *ngIf="transactionDayAux.isToday" class="border bg-warning">
+                                        <tr>
+                                            <th>
+                                                <p><b>Day {{transactionDayAux.day}}</b></p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <thead *ngIf="!transactionDayAux.isToday" class="border">
+                                        <tr>
+                                            <th>
+                                                <p><b>Day {{transactionDayAux.day}}</b></p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <div class="list-group">
+                                                    <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
+                                                        <div [ngSwitch]="transactionAux.typeTransaction">
+                                                            <div *ngSwitchCase="AdjustType">
+                                                                <img src="{{PATH_IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
+                                                            </div>
+                                                            <div *ngSwitchCase="IncomingType">
+                                                                <img src="{{PATH_IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
+                                                            </div>
+                                                            <div *ngSwitchCase="SpendType">
+                                                                <img src="{{PATH_IMG_SPENDING}}" /> {{toTransactionView(transactionAux)}}
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <button type="button" class="btn btn-success" (click)="openTransactionConfigModal(modalABMTransaction, undefined, transactionDayAux.day)">+</button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="!transactionDayAux.isTransactionAvailable">
+                                <p></p>
+                            </div>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th *ngFor="let weekDayAux of transactionsCalendar.weekDays" scope="col" class="text-center">
-                {{weekDayAux}}
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let week of transactionsCalendar.matrixCalendar">
-            <th *ngFor="let transactionDayAux of week">
-                <div *ngIf="transactionDayAux.isTransactionAvailable">
-                    <table class="table">
-                        <thead *ngIf="transactionDayAux.isToday" class="border bg-warning">
-                            <tr>
-                                <th>
-                                    <p><b>Day {{transactionDayAux.day}}</b></p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <thead *ngIf="!transactionDayAux.isToday" class="border">
-                            <tr>
-                                <th>
-                                    <p><b>Day {{transactionDayAux.day}}</b></p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <div class="list-group">
-                                        <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
-                                            <div [ngSwitch]="transactionAux.typeTransaction">
-                                                <div *ngSwitchCase="AdjustType">
-                                                    <img src="{{PATH_IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
-                                                </div>
-                                                <div *ngSwitchCase="IncomingType">
-                                                    <img src="{{PATH_IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
-                                                </div>
-                                                <div *ngSwitchCase="SpendType">
-                                                    <img src="{{PATH_IMG_SPENDING}}" /> {{toTransactionView(transactionAux)}}
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <button type="button" class="btn btn-success" (click)="openTransactionConfigModal(modalABMTransaction, undefined, transactionDayAux.day)">+</button>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div *ngIf="!transactionDayAux.isTransactionAvailable">
-                    <p></p>
-                </div>
-            </th>
-        </tr>
-    </tbody>
-</table>
+
 
 <ng-template #modalABMTransaction let-modal>
     <div class="modal-header">
@@ -160,7 +170,7 @@
                     <th scope="col"><button type="submit" class="btn btn-outline-danger" (click)="deleteTransactionCode(codeAux.value.id)">Delete</button></th>
                 </tr>
                 <tr>
-                    <th scope="col"><input type="text" value="" name="codeTransactionInput" [(ngModel)]="newCodeTransaction"/></th>
+                    <th scope="col"><input type="text" value="" name="codeTransactionInput" [(ngModel)]="newCodeTransaction" /></th>
                     <th scope="col"><button type="submit" class="btn btn-outline-success" (click)="addTransactionCode(newCodeTransaction)">Add</button></th>
                 </tr>
             </tbody>

@@ -24,7 +24,7 @@ export class ResumeOutlays implements OnInit {
     constructor(private calendarService: CalendarService, private apiService: OutlayManagerAPI) {
 
         this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
-            this.loadResume(transactionCalendarMatrix);
+            this.loadMonthResume(transactionCalendarMatrix);
             this.loadTotalAmount();
         });
     }
@@ -33,7 +33,7 @@ export class ResumeOutlays implements OnInit {
         this.loadTotalAmount();
     }
 
-    public loadResume(transactionCalendarMatrix: TransacionCalendar[][]):void {
+    public loadMonthResume(transactionCalendarMatrix: TransacionCalendar[][]):void {
 
         var incoming:number = 0.0;
         var expenses:number = 0.0;

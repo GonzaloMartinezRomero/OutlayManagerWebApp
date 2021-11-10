@@ -1,7 +1,11 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/OutlaysManagerWebClient",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:10896",
       "sslPort": 0
@@ -15,13 +19,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "OutlaysManagerWebClient": {
-      "commandName": "Project",
+    "ProductionDeploy": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "http://localhost:10896"
     }
   }
 }

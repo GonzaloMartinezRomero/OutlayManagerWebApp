@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
+    <AngularClientRoot>clientAngular</AngularClientRoot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,4 +26,8 @@
     <Folder Include="clientAngular\src\assets\img\" />
   </ItemGroup>
 
+  <Target Name="PublishAngularBuilder" BeforeTargets="BeforePublish">
+    <Exec WorkingDirectory="$(AngularClientRoot)" Command="ng build --configuration production" />
+  </Target>
+  
 </Project>

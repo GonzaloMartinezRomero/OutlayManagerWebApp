@@ -1,5 +1,5 @@
 import { __decorate } from "tslib";
-import { Component } from "@angular/core";
+import { Component, Injectable } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
 let DateSelector = class DateSelector {
     constructor(calendarService, outlayManagerAPI, mainApp) {
@@ -7,18 +7,18 @@ let DateSelector = class DateSelector {
         this.outlayManagerAPI = outlayManagerAPI;
         this.mainApp = mainApp;
         this.monthsNamesMap = new Map([
-            ["Enero", 1],
-            ["Febrero", 2],
-            ["Marzo", 3],
-            ["Abril", 4],
-            ["Mayo", 5],
-            ["Junio", 6],
-            ["Julio", 7],
-            ["Agosto", 8],
-            ["Septiembre", 9],
-            ["Octubre", 10],
-            ["Noviembre", 11],
-            ["Diciembre", 12],
+            ["January", 1],
+            ["Febrary", 2],
+            ["March", 3],
+            ["April", 4],
+            ["May", 5],
+            ["Juny", 6],
+            ["July", 7],
+            ["Agost", 8],
+            ["September", 9],
+            ["October", 10],
+            ["November", 11],
+            ["December", 12],
         ]);
         this.yearsAvailables = new Array();
         this.yearView = "";
@@ -29,6 +29,7 @@ let DateSelector = class DateSelector {
             .subscribe(response => {
             this.yearsAvailables = response;
             this.loadCurrentDateToView();
+            this.updateCalendar();
         }, error => {
             this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
         });
@@ -78,7 +79,8 @@ DateSelector = __decorate([
     Component({
         selector: "date-selector",
         templateUrl: "dateSelector.component.html"
-    })
+    }),
+    Injectable()
 ], DateSelector);
 export { DateSelector };
 //# sourceMappingURL=dateSelector.component.js.map

@@ -9,13 +9,15 @@ import { OutlayManagerAPI } from './services/OutlayManagerAPI.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Calendar } from './views/calendar/calendar.component';
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
+import { ResumeMonthTransactions } from './views/resumeMonthTransactions/resumeMonthTransactions.component';
 
 @NgModule({
   declarations: [
         AppComponent,
         DateSelector,
         Calendar,
-        ResumeOutlays
+        ResumeOutlays,
+        ResumeMonthTransactions
   ],
   imports: [
       BrowserModule,
@@ -28,7 +30,7 @@ import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
       OutlayManagerAPI,
       AppComponent     
   ],
-    bootstrap: [AppComponent]
+  bootstrap: [AppComponent]
     
 
 })

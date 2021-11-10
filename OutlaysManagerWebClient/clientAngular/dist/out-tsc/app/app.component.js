@@ -1,6 +1,5 @@
 import { __decorate } from "tslib";
-import { ViewChild } from '@angular/core';
-import { Component, Injectable } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
 import { MessageView, VerboseType } from './model/MessageView';
 let AppComponent = class AppComponent {
     constructor(ngbModal) {

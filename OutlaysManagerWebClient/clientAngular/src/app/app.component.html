@@ -1,14 +1,15 @@
 ﻿<div class="container-fluid">
-    <div class="row">
+    <div class="row">        
         <div class="col-5">           
-            <date-selector></date-selector>           
-        </div>
-        <div class="col-7">           
             <resumeOutlays></resumeOutlays>
         </div>
+        <div class="col-7">
+            <resumeMonthTransactions></resumeMonthTransactions>
+        </div>
     </div>    
-    <br>
-    <calendar></calendar>
+    <div class="row">         
+        <calendar class="col-12"></calendar>
+    </div>
 </div>
 
 <ng-template #modalMessage let-modal>
