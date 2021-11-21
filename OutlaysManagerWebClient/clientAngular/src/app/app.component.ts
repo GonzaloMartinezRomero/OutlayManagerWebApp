@@ -1,7 +1,6 @@
-import { AfterViewChecked, Component, Injectable, ViewChild } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MessageView, VerboseType } from './model/MessageView';
-import { DateSelector } from './views/dateSelector/dateSelector.component';
 
 @Component({
     selector: 'OutlayManagerMainPage',

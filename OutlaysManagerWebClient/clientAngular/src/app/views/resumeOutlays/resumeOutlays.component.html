@@ -13,11 +13,11 @@
             <td> <p>{{expensesView}}€</p></td>
             <td>
                 <div *ngIf="isGreaterThanZero(savingView)">
-                    <p>{{savingView}}€ <span><img src="{{PATH_ARROW_UP}}" /></span> </p> 
+                    <p>{{savingView}}€ <span><img src="/img/{{IMG_ARROW_UP}}" /></span> </p> 
                 </div>
 
                 <div *ngIf="!isGreaterThanZero(savingView)">
-                    <p>{{savingView}}€ <span><img src="{{PATH_ARROW_DOWN}}" /></span> </p>  
+                    <p>{{savingView}}€ <span><img src="/img/{{IMG_ARROW_DOWN}}" /></span> </p>  
                 </div>
             </td>
         </tr>        

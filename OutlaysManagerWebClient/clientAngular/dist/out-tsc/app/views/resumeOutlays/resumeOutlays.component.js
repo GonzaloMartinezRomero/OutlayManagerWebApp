@@ -9,8 +9,8 @@ let ResumeOutlays = class ResumeOutlays {
         this.expensesView = "0";
         this.savingView = "0";
         this.totalAmountView = "0";
-        this.PATH_ARROW_UP = "clientAngular/assets/img/arrowUp.svg";
-        this.PATH_ARROW_DOWN = "clientAngular/assets/img/arrowDown.svg";
+        this.IMG_ARROW_UP = "arrowUp.svg";
+        this.IMG_ARROW_DOWN = "arrowDown.svg";
         this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
             this.loadMonthResume(transactionCalendarMatrix);
             this.loadTotalAmount();

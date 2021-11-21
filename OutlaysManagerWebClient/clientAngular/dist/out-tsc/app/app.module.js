@@ -1,16 +1,20 @@
 import { __decorate } from "tslib";
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { CalendarService } from './services/calendar.service';
-import { DateSelector } from "./views/dateSelector/dateSelector.component";
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from "@angular/common/http";
-import { OutlayManagerAPI } from './services/OutlayManagerAPI.service';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgChartsModule } from 'ng2-charts';
+import { AppComponent } from './app.component';
+import { Analycer } from "./pages/analycer/analycer.component";
+import { Dashboard } from "./pages/dashboard/dashboard.component";
+import routerConfig from './router/router';
+import { CalendarService } from './services/calendar.service';
+import { OutlayManagerAPI } from './services/OutlayManagerAPI.service';
 import { Calendar } from './views/calendar/calendar.component';
-import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
+import { DateSelector } from "./views/dateSelector/dateSelector.component";
 import { ResumeMonthTransactions } from './views/resumeMonthTransactions/resumeMonthTransactions.component';
+import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -20,13 +24,17 @@ AppModule = __decorate([
             DateSelector,
             Calendar,
             ResumeOutlays,
-            ResumeMonthTransactions
+            ResumeMonthTransactions,
+            Dashboard,
+            Analycer
         ],
         imports: [
             BrowserModule,
             FormsModule,
             HttpClientModule,
-            NgbModule
+            NgbModule,
+            NgChartsModule,
+            routerConfig
         ],
         providers: [
             CalendarService,

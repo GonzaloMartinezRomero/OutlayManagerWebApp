@@ -27,9 +27,9 @@ export class Calendar implements OnInit {
     public readonly IncomingType: string = TransactionTypes.INCOMING;
     public readonly SpendType: string = TransactionTypes.SPENDING;
 
-    public readonly PATH_IMG_SPENDING: string = "clientAngular/assets/img/expenseArrow.png";
-    public readonly PATH_IMG_INCOMING: string = "clientAngular/assets/img/incomingArrow.png";
-    public readonly PATH_IMG_ADJUST: string = "clientAngular/assets/img/adjustIcon.png";
+    public readonly IMG_SPENDING: string = "expenseArrow.png";
+    public readonly IMG_INCOMING: string = "incomingArrow.png";
+    public readonly IMG_ADJUST: string = "adjustIcon.png";
 
     public transactionsCalendar: TransactionsCalendarContainer;
     public transactionView: TransactionDTO = new TransactionDTO();

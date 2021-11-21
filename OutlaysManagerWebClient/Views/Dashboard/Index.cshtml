@@ -1,17 +1,16 @@
-﻿@page
-@model IndexModel
-@{
+﻿@{
     ViewData["Title"] = "Home page";
 }
 
 @section Scripts{
     <script src="~/clientAngular/main.js"></script>
     <script src="~/clientAngular/polyfills.js"></script>
-    <script src="~/clientAngular/runtime.js"></script>
+    <script src="~/clientAngular/runtime.js"></script>    
 }
 
-@section head{
-    <link href="~/clientAngular/styles.css" rel="stylesheet" />
+@section head{   
+   <base href="/Dashboard/Index"/> 
+   <link href="~/clientAngular/styles.css" rel="stylesheet" />
 }
 
 <OutlayManagerMainPage></OutlayManagerMainPage>

@@ -43,13 +43,13 @@
                                                     <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
                                                         <div [ngSwitch]="transactionAux.typeTransaction">
                                                             <div *ngSwitchCase="AdjustType">
-                                                                <img src="{{PATH_IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
+                                                                <img src="/img/{{IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
                                                             </div>
                                                             <div *ngSwitchCase="IncomingType">
-                                                                <img src="{{PATH_IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
+                                                                <img src="/img/{{IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
                                                             </div>
                                                             <div *ngSwitchCase="SpendType">
-                                                                <img src="{{PATH_IMG_SPENDING}}" /> {{toTransactionView(transactionAux)}}
+                                                                <img src="/img/{{IMG_SPENDING}}" /> {{toTransactionView(transactionAux)}}
                                                             </div>
                                                         </div>
                                                     </button>

@@ -18,8 +18,8 @@ export class ResumeOutlays implements OnInit {
     public savingView: string = "0";
     public totalAmountView: string = "0";
 
-    public PATH_ARROW_UP: string = "clientAngular/assets/img/arrowUp.svg";
-    public PATH_ARROW_DOWN: string = "clientAngular/assets/img/arrowDown.svg";
+    public IMG_ARROW_UP: string = "arrowUp.svg";
+    public IMG_ARROW_DOWN: string = "arrowDown.svg";
 
     constructor(private calendarService: CalendarService, private apiService: OutlayManagerAPI) {
 

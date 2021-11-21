@@ -47,12 +47,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets/*",
-              "src/assets/img/arrowUp.svg",
-              "src/assets/img/adjustIcon.png",
-              "src/assets/img/arrowDown.svg",
-              "src/assets/img/expenseArrow.png",
-              "src/assets/img/incomingArrow.png"
+              "src/assets/"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
