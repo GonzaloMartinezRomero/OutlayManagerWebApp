@@ -3,17 +3,14 @@ import { Component } from "@angular/core";
 import { ResumeMonthTransacion } from "../../model/ResumeMonthTransaction";
 import { TransactionTypes } from "../../model/TransactionTypes";
 let ResumeMonthTransactions = class ResumeMonthTransactions {
-    constructor(calendarService) {
-        this.calendarService = calendarService;
+    constructor() {
         this.spendingsTransactions = new Array();
         this.incomingTransactions = new Array();
-        calendarService.matrixCalendarSubject.subscribe((transactionsCalendar => {
-            this.loadResumeTransactions(transactionsCalendar);
-        }));
     }
-    loadResumeTransactions(transactionCalendarArray) {
+    loadResumeTransactions(transactionCalendarContainer) {
         var spendingsTransactionsMapAux = new Map();
         var incomingsransactionsMapAux = new Map();
+        var transactionCalendarArray = transactionCalendarContainer.matrixCalendar;
         transactionCalendarArray.forEach(week => {
             week.forEach(day => {
                 day.transactionArray.forEach(transactionAux => {

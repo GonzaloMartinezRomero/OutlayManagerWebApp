@@ -2,8 +2,7 @@ import { __decorate } from "tslib";
 import { Component } from "@angular/core";
 import { TransactionTypes } from "../../model/TransactionTypes";
 let ResumeOutlays = class ResumeOutlays {
-    constructor(calendarService, apiService) {
-        this.calendarService = calendarService;
+    constructor(apiService) {
         this.apiService = apiService;
         this.incomingView = "0";
         this.expensesView = "0";
@@ -11,15 +10,12 @@ let ResumeOutlays = class ResumeOutlays {
         this.totalAmountView = "0";
         this.IMG_ARROW_UP = "arrowUp.svg";
         this.IMG_ARROW_DOWN = "arrowDown.svg";
-        this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
-            this.loadMonthResume(transactionCalendarMatrix);
-            this.loadTotalAmount();
-        });
     }
     ngOnInit() {
         this.loadTotalAmount();
     }
-    loadMonthResume(transactionCalendarMatrix) {
+    loadMonthResume(transactionCalendarContainer) {
+        var transactionCalendarMatrix = transactionCalendarContainer.matrixCalendar;
         var incoming = 0.0;
         var expenses = 0.0;
         var saving = 0.0;

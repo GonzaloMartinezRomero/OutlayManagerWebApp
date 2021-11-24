@@ -24,6 +24,14 @@ let OutlayManagerAPI = class OutlayManagerAPI {
             throw exception;
         }));
     }
+    loadTransactionsYear(year) {
+        var endPoint = this.HOST + "Transaction?year=" + year;
+        return this.httpClient.get(endPoint)
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Get transactions");
+            throw exception;
+        }));
+    }
     saveTransaction(transaction) {
         var CRUDOperationURL = this.HOST + "Transaction";
         let transactionJSON = this.transactionToJSON(transaction);

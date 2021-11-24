@@ -1,0 +1,33 @@
+﻿<div class="container-fluid">
+    <div class="row">
+        <div class="col-5">
+            <form class="form-inline">
+                <div class="form-group">
+                    <h4 class="mt-2">Select Year</h4>
+                    <select class="form-control ml-2" [(ngModel)]="yearSelected" id="year" name="year">
+                        <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
+                    </select>
+                </div>
+                <button id="buttonAddSavingYear" type="button" class="btn btn-success ml-2" (click)="addYearOutlaysSavings()">Add</button>
+                <br />
+                <button id="buttonClear" type="button" class="btn btn-info ml-2" (click)="clearChart()">Clear</button>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-8">
+            <h3>Savings Resume</h3>            
+                <canvas baseChart
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [plugins]="barChartPlugins"
+                        [type]="barChartType"
+                        (chartClick)="updateTransactionsResume($event)">
+                </canvas>           
+        </div>
+        <div class="col-4">
+            <resumeMonthTransactions></resumeMonthTransactions>
+        </div>
+    </div>
+</div>

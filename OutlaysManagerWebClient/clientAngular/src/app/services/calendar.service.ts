@@ -8,14 +8,13 @@ import { OutlayManagerAPI } from "./OutlayManagerAPI.service";
 @Injectable()
 export class CalendarService {
 
-    private weekDays: Array<string> = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
-
-    //Este contenedor se usa en la vista, por lo tanto cada cambio es sensible y se modifica sin tener que subscribrise explicitamente
-    public transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();
-
     //Se utiliza para que cuando se modifique el calendario, todos los subscriptores que usen los datos del mismo para
     //hacer algun calculo, se les llame y actualicen su contenido
-    public matrixCalendarSubject: Subject<Array<Array<TransacionCalendar>>> = new Subject<Array<Array<TransacionCalendar>>>();   
+    public calendarContainerSubject: Subject<TransactionsCalendarContainer> = new Subject<TransactionsCalendarContainer>();
+
+    private weekDays: Array<string> = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+    
+    private transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();
 
     constructor(private outlayManagerAPI: OutlayManagerAPI) { }
 
@@ -42,7 +41,7 @@ export class CalendarService {
 
                 this.loadCompleteCalendar(year, month, transactionsMap);
 
-                this.matrixCalendarSubject.next(this.transactionsCalendar.matrixCalendar);                
+                this.calendarContainerSubject.next(this.transactionsCalendar);                
             });
     }
 

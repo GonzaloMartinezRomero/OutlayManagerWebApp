@@ -5,12 +5,11 @@ import { TransacionCalendar, TransactionsCalendarContainer } from "../model/Tran
 let CalendarService = class CalendarService {
     constructor(outlayManagerAPI) {
         this.outlayManagerAPI = outlayManagerAPI;
-        this.weekDays = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
-        //Este contenedor se usa en la vista, por lo tanto cada cambio es sensible y se modifica sin tener que subscribrise explicitamente
-        this.transactionsCalendar = new TransactionsCalendarContainer();
         //Se utiliza para que cuando se modifique el calendario, todos los subscriptores que usen los datos del mismo para
         //hacer algun calculo, se les llame y actualicen su contenido
-        this.matrixCalendarSubject = new Subject();
+        this.calendarContainerSubject = new Subject();
+        this.weekDays = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+        this.transactionsCalendar = new TransactionsCalendarContainer();
     }
     loadTransactionsCalendar(year, month) {
         this.outlayManagerAPI.loadTransactions(year, month)
@@ -29,7 +28,7 @@ let CalendarService = class CalendarService {
                 }
             });
             this.loadCompleteCalendar(year, month, transactionsMap);
-            this.matrixCalendarSubject.next(this.transactionsCalendar.matrixCalendar);
+            this.calendarContainerSubject.next(this.transactionsCalendar);
         });
     }
     loadCompleteCalendar(year, month, transactionsMap) {

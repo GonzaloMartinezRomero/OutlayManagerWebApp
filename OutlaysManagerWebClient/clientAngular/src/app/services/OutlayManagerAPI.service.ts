@@ -43,6 +43,17 @@ export class OutlayManagerAPI {
             }));
     }
 
+    public loadTransactionsYear(year: number): Observable<TransactionDTO[]> {
+        var endPoint: string = this.HOST + "Transaction?year=" + year;
+
+        return this.httpClient.get<TransactionDTO[]>(endPoint)
+            .pipe(catchError((ex: any) => {
+
+                var exception = this.buildExceptionMessage(ex, "Get transactions");
+                throw exception;
+            }));
+    }
+
     public saveTransaction(transaction: TransactionDTO): Observable<ResponseTransactionAPI> {
 
         var CRUDOperationURL = this.HOST + "Transaction";

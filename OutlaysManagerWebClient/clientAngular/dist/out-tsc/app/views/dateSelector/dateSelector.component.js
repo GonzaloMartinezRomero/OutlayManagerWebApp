@@ -1,11 +1,12 @@
 import { __decorate } from "tslib";
-import { Component, Injectable } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
+import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
 let DateSelector = class DateSelector {
-    constructor(calendarService, outlayManagerAPI, mainApp) {
-        this.calendarService = calendarService;
+    constructor(outlayManagerAPI, mainApp) {
         this.outlayManagerAPI = outlayManagerAPI;
         this.mainApp = mainApp;
+        this.updateDateCalendarEmitter = new EventEmitter();
         this.monthsNamesMap = new Map([
             ["January", 1],
             ["Febrary", 2],
@@ -24,7 +25,7 @@ let DateSelector = class DateSelector {
         this.yearView = "";
         this.monthView = "";
     }
-    ngOnInit() {
+    ngAfterViewInit() {
         this.outlayManagerAPI.loadYearsAvailabes()
             .subscribe(response => {
             this.yearsAvailables = response;
@@ -41,7 +42,10 @@ let DateSelector = class DateSelector {
             if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
                 throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
             }
-            this.calendarService.loadTransactionsCalendar(yearNormalized, monthNormalized);
+            var calendarDate = new DateCalendar();
+            calendarDate.Year = yearNormalized;
+            calendarDate.Month = monthNormalized;
+            this.updateDateCalendarEmitter.emit(calendarDate);
         }
         catch (exception) {
             var messageView = new MessageView();
@@ -75,12 +79,14 @@ let DateSelector = class DateSelector {
         });
     }
 };
+__decorate([
+    Output()
+], DateSelector.prototype, "updateDateCalendarEmitter", void 0);
 DateSelector = __decorate([
     Component({
         selector: "date-selector",
         templateUrl: "dateSelector.component.html"
-    }),
-    Injectable()
+    })
 ], DateSelector);
 export { DateSelector };
 //# sourceMappingURL=dateSelector.component.js.map

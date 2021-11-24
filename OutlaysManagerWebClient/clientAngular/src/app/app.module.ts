@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgChartsModule } from 'ng2-charts';
 import { AppComponent } from './app.component';
 import { Analycer } from "./pages/analycer/analycer.component";
 import { Dashboard } from "./pages/dashboard/dashboard.component";
@@ -14,6 +13,8 @@ import { Calendar } from './views/calendar/calendar.component';
 import { DateSelector } from "./views/dateSelector/dateSelector.component";
 import { ResumeMonthTransactions } from './views/resumeMonthTransactions/resumeMonthTransactions.component';
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
+import { NgChartsModule } from 'ng2-charts';
+import { SavingChart } from "./views/savingChart/savingChart.component";
 
 @NgModule({
   declarations: [
@@ -23,15 +24,16 @@ import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
         ResumeOutlays,
         ResumeMonthTransactions,
         Dashboard,
-        Analycer
+        Analycer,
+        SavingChart
   ],
   imports: [
       BrowserModule,
       FormsModule,
       HttpClientModule,
       NgbModule,
-      NgChartsModule,
-      routerConfig
+      routerConfig,
+      NgChartsModule
   ],
   providers: [
       CalendarService,

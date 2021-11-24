@@ -1,9 +1,8 @@
 ﻿import { Component } from "@angular/core";
 import { ResumeMonthTransacion } from "../../model/ResumeMonthTransaction";
 import { TransactionDTO } from "../../model/TransactionDTO";
-import { TransacionCalendar } from "../../model/TransactionsCalendarContainer";
+import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
-import { CalendarService } from "../../services/calendar.service";
 
 @Component(
     {
@@ -18,17 +17,14 @@ export class ResumeMonthTransactions{
     public spendingsTransactions: Array<ResumeMonthTransacion> = new Array<ResumeMonthTransacion>();
     public incomingTransactions: Array<ResumeMonthTransacion> = new Array<ResumeMonthTransacion>();
 
-    constructor(private calendarService: CalendarService) {
+    constructor() { }
 
-        calendarService.matrixCalendarSubject.subscribe((transactionsCalendar => {
-            this.loadResumeTransactions(transactionsCalendar);
-        }));
-    }   
-
-    private loadResumeTransactions(transactionCalendarArray: TransacionCalendar[][]): void {
+    public loadResumeTransactions(transactionCalendarContainer: TransactionsCalendarContainer): void {
 
         var spendingsTransactionsMapAux: Map<string,ResumeMonthTransacion> = new Map<string,ResumeMonthTransacion>();
-        var incomingsransactionsMapAux: Map<string,ResumeMonthTransacion> = new Map<string,ResumeMonthTransacion>();
+        var incomingsransactionsMapAux: Map<string, ResumeMonthTransacion> = new Map<string, ResumeMonthTransacion>();
+
+        var transactionCalendarArray: TransacionCalendar[][] = transactionCalendarContainer.matrixCalendar;
 
         transactionCalendarArray.forEach(week => {
             week.forEach(day => {
@@ -47,7 +43,7 @@ export class ResumeMonthTransactions{
         });
 
         this.spendingsTransactions = [...spendingsTransactionsMapAux.values()].sort(this.comparatorTransactionMapValue);
-        this.incomingTransactions = [...incomingsransactionsMapAux.values()].sort(this.comparatorTransactionMapValue);        
+        this.incomingTransactions = [...incomingsransactionsMapAux.values()].sort(this.comparatorTransactionMapValue);
     }
 
     private aggregateValue(collectionMap: Map<string, ResumeMonthTransacion>, transaction: TransactionDTO): void {

@@ -1,8 +1,11 @@
 import { __decorate } from "tslib";
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionDTO } from "../../model/TransactionDTO";
+import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
+import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 let Calendar = class Calendar {
     constructor(calendarService, outlayManagerService, modalABM, mainApp) {
         this.calendarService = calendarService;
@@ -17,11 +20,12 @@ let Calendar = class Calendar {
         this.IMG_SPENDING = "expenseArrow.png";
         this.IMG_INCOMING = "incomingArrow.png";
         this.IMG_ADJUST = "adjustIcon.png";
+        this.transactionsCalendar = new TransactionsCalendarContainer();
         this.transactionView = new TransactionDTO();
         this.transactionTypeMap = new Map();
         this.transactionCodesMap = new Map();
         this.newCodeTransaction = "";
-        this.transactionsCalendar = calendarService.transactionsCalendar;
+        this.calendarService.calendarContainerSubject.subscribe(response => { this.loadCalendar(response); });
     }
     ngOnInit() {
         this.outlayManagerService.loadTransactionTypeOutlays()
@@ -31,6 +35,17 @@ let Calendar = class Calendar {
             arrayTypeTransaction.forEach(x => this.transactionTypeMap.set(x.type, x));
         }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load transaction type outlays")); });
         this.loadCodeListTransactions();
+    }
+    loadCalendar(transactionCalendarContainer) {
+        var _a, _b;
+        //Update main class calendar
+        this.transactionsCalendar = transactionCalendarContainer;
+        //Update childs values
+        (_a = this.resumeMonthComponent) === null || _a === void 0 ? void 0 : _a.loadResumeTransactions(transactionCalendarContainer);
+        (_b = this.resumeOutlaysComponent) === null || _b === void 0 ? void 0 : _b.loadMonthResume(transactionCalendarContainer);
+    }
+    updateCalendarDate(dateCalendar) {
+        this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
     }
     openTransactionConfigModal(modalTemplate, transaction, day) {
         if (transaction === undefined) {
@@ -168,6 +183,12 @@ let Calendar = class Calendar {
         return messageView;
     }
 };
+__decorate([
+    ViewChild(ResumeMonthTransactions)
+], Calendar.prototype, "resumeMonthComponent", void 0);
+__decorate([
+    ViewChild(ResumeOutlays)
+], Calendar.prototype, "resumeOutlaysComponent", void 0);
 Calendar = __decorate([
     Component({
         selector: "calendar",

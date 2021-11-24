@@ -1,7 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { TransacionCalendar } from "../../model/TransactionsCalendarContainer";
+import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
-import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 
 @Component(
@@ -21,19 +20,17 @@ export class ResumeOutlays implements OnInit {
     public IMG_ARROW_UP: string = "arrowUp.svg";
     public IMG_ARROW_DOWN: string = "arrowDown.svg";
 
-    constructor(private calendarService: CalendarService, private apiService: OutlayManagerAPI) {
-
-        this.calendarService.matrixCalendarSubject.subscribe((transactionCalendarMatrix) => {
-            this.loadMonthResume(transactionCalendarMatrix);
-            this.loadTotalAmount();
-        });
+    constructor(private apiService: OutlayManagerAPI) {
+      
     }
 
     ngOnInit(): void {
         this.loadTotalAmount();
     }
 
-    public loadMonthResume(transactionCalendarMatrix: TransacionCalendar[][]):void {
+    public loadMonthResume(transactionCalendarContainer: TransactionsCalendarContainer):void {
+
+        var transactionCalendarMatrix: TransacionCalendar[][] = transactionCalendarContainer.matrixCalendar;
 
         var incoming:number = 0.0;
         var expenses:number = 0.0;

@@ -1,6 +1,7 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from "../../app.component";
+import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionCodeDTO } from "../../model/TransactionCodeDTO";
 import { TransactionDTO } from "../../model/TransactionDTO";
@@ -9,6 +10,8 @@ import { TransactionTypes } from "../../model/TransactionTypes";
 import { TypeTransactionDTO } from "../../model/TypeTransactionDTO";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 
 
 @Component(
@@ -19,6 +22,9 @@ import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
 )
 
 export class Calendar implements OnInit {
+
+    @ViewChild(ResumeMonthTransactions) resumeMonthComponent: ResumeMonthTransactions | undefined;
+    @ViewChild(ResumeOutlays) resumeOutlaysComponent: ResumeOutlays | undefined;
 
     private deleteConfirmationModalRef?: NgbModalRef = undefined;
     private setupModalTransactionTypeRef?: NgbModalRef = undefined;
@@ -31,7 +37,7 @@ export class Calendar implements OnInit {
     public readonly IMG_INCOMING: string = "incomingArrow.png";
     public readonly IMG_ADJUST: string = "adjustIcon.png";
 
-    public transactionsCalendar: TransactionsCalendarContainer;
+    public transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();
     public transactionView: TransactionDTO = new TransactionDTO();
     public transactionTypeMap: Map<string, TypeTransactionDTO> = new Map<string,TypeTransactionDTO>();
     public transactionCodesMap: Map<string,TransactionCodeDTO> = new Map<string,TransactionCodeDTO>();
@@ -41,7 +47,7 @@ export class Calendar implements OnInit {
     constructor(public calendarService: CalendarService, private outlayManagerService: OutlayManagerAPI, private modalABM: NgbModal,
                 private mainApp: AppComponent)
     {
-        this.transactionsCalendar = calendarService.transactionsCalendar;
+        this.calendarService.calendarContainerSubject.subscribe(response => { this.loadCalendar(response); });
     }
 
     ngOnInit(): void {
@@ -56,6 +62,21 @@ export class Calendar implements OnInit {
             }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error,"Load transaction type outlays")); });
 
         this.loadCodeListTransactions();
+    }
+
+    public loadCalendar(transactionCalendarContainer: TransactionsCalendarContainer) {
+
+        //Update main class calendar
+        this.transactionsCalendar = transactionCalendarContainer;
+
+        //Update childs values
+        this.resumeMonthComponent?.loadResumeTransactions(transactionCalendarContainer);
+        this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer);
+    }
+
+    public updateCalendarDate(dateCalendar: DateCalendar) {
+        
+        this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
     }
 
     public openTransactionConfigModal(modalTemplate: any, transaction: TransactionDTO | undefined, day: number | undefined) {
