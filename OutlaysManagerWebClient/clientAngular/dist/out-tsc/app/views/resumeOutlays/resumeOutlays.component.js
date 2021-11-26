@@ -11,9 +11,6 @@ let ResumeOutlays = class ResumeOutlays {
         this.IMG_ARROW_UP = "arrowUp.svg";
         this.IMG_ARROW_DOWN = "arrowDown.svg";
     }
-    ngOnInit() {
-        this.loadTotalAmount();
-    }
     loadMonthResume(transactionCalendarContainer) {
         var transactionCalendarMatrix = transactionCalendarContainer.matrixCalendar;
         var incoming = 0.0;
@@ -40,6 +37,7 @@ let ResumeOutlays = class ResumeOutlays {
         this.incomingView = this.toEuroString(incoming);
         this.expensesView = this.toEuroString(expenses);
         this.savingView = this.toEuroString(saving);
+        this.loadTotalAmount();
     }
     isGreaterThanZero(amount) {
         var valueCero = 0.0;

@@ -10,7 +10,7 @@ import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
     }
 )
 
-export class ResumeOutlays implements OnInit {
+export class ResumeOutlays {
 
     public incomingView: string = "0";
     public expensesView: string = "0";
@@ -22,10 +22,6 @@ export class ResumeOutlays implements OnInit {
 
     constructor(private apiService: OutlayManagerAPI) {
       
-    }
-
-    ngOnInit(): void {
-        this.loadTotalAmount();
     }
 
     public loadMonthResume(transactionCalendarContainer: TransactionsCalendarContainer):void {
@@ -59,7 +55,10 @@ export class ResumeOutlays implements OnInit {
 
         this.incomingView = this.toEuroString(incoming);
         this.expensesView = this.toEuroString(expenses);
-        this.savingView = this.toEuroString(saving);          
+        this.savingView = this.toEuroString(saving);
+
+        this.loadTotalAmount();
+
     }
 
     public isGreaterThanZero(amount: string): boolean {
