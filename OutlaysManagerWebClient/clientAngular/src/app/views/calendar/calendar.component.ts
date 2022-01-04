@@ -9,7 +9,8 @@ import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarC
 import { TransactionTypes } from "../../model/TransactionTypes";
 import { TypeTransactionDTO } from "../../model/TypeTransactionDTO";
 import { CalendarService } from "../../services/calendar.service";
-import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
+import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
 import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 
@@ -47,7 +48,10 @@ export class Calendar implements OnInit {
     constructor(public calendarService: CalendarService, private outlayManagerService: OutlayManagerAPI, private modalABM: NgbModal,
                 private mainApp: AppComponent)
     {
-        this.calendarService.calendarContainerSubject.subscribe(response => { this.loadCalendar(response); });
+        this.calendarService.calendarContainerSubject.subscribe(response =>
+        {
+            this.loadCalendar(response);
+        });
     }
 
     ngOnInit(): void {
@@ -59,24 +63,31 @@ export class Calendar implements OnInit {
                 this.transactionTypeMap = new Map<string, TypeTransactionDTO>();
                 arrayTypeTransaction.forEach(x => this.transactionTypeMap.set(x.type, x));
 
-            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error,"Load transaction type outlays")); });
+            }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
 
         this.loadCodeListTransactions();
     }
 
     public loadCalendar(transactionCalendarContainer: TransactionsCalendarContainer) {
 
-        //Update main class calendar
-        this.transactionsCalendar = transactionCalendarContainer;
+        if (transactionCalendarContainer.isError) {
 
-        //Update childs values
-        this.resumeMonthComponent?.loadResumeTransactions(transactionCalendarContainer);
-        this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer);
+            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(transactionCalendarContainer.exceptionAPI));
+
+        } else {
+
+            //Update main class calendar
+            this.transactionsCalendar = transactionCalendarContainer;
+
+            //Update childs values
+            this.resumeMonthComponent?.loadResumeTransactions(transactionCalendarContainer);
+            this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer);
+        }
     }
 
     public updateCalendarDate(dateCalendar: DateCalendar) {
         
-        this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
+       this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
     }
 
     public openTransactionConfigModal(modalTemplate: any, transaction: TransactionDTO | undefined, day: number | undefined) {
@@ -128,7 +139,7 @@ export class Calendar implements OnInit {
 
             },
                 error => {
-                    this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, operationType));
+                    this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
              });
     }
 
@@ -150,7 +161,7 @@ export class Calendar implements OnInit {
                     this.closeTransactionConfigurationModal();
 
                     this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
-                }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, operationType));});
+                }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));});
         }
         else
         {
@@ -186,7 +197,7 @@ export class Calendar implements OnInit {
 
                 }, error => {
                     
-                    this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Delete code transaction"));
+                    this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
                 });
     }
 
@@ -200,7 +211,7 @@ export class Calendar implements OnInit {
                     this.newCodeTransaction = "";
                 }, error => {
                   
-                    this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Add code transaction"));
+                    this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
                 });
 
         } else {
@@ -219,7 +230,7 @@ export class Calendar implements OnInit {
                 this.transactionCodesMap = new Map<string, TransactionCodeDTO>();
                 transactionCodeArray.forEach(x => this.transactionCodesMap.set(x.code, x));
 
-            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load code list transactions")); });
+            }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
     }
 
     private copyTransaction(transaction: TransactionDTO): TransactionDTO {
@@ -236,19 +247,6 @@ export class Calendar implements OnInit {
         transactionCopy.typeTransactionID = transaction.typeTransactionID;
 
         return transactionCopy;
-    }
-
-    private buildMessageErrorFromAPIError(error: any, action: string): MessageView {
-
-        var messageView = new MessageView();
-
-        messageView.action = action;
-        messageView.titleError = error.Message;
-        messageView.detail = "Calling EndPoint: "+error.EndPoint;
-        messageView.statusCode = error.StatusCode;
-        messageView.verbose = VerboseType.Error;
-
-        return messageView;
     }
 
     private buildMessageError(error:string,action:string) {

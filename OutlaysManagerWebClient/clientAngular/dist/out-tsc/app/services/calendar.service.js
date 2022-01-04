@@ -14,6 +14,7 @@ let CalendarService = class CalendarService {
     loadTransactionsCalendar(year, month) {
         this.outlayManagerAPI.loadTransactions(year, month)
             .subscribe(response => {
+            this.transactionsCalendar = new TransactionsCalendarContainer();
             var transactionsMap = new Map();
             response.forEach(transactionAux => {
                 var _a;
@@ -29,6 +30,11 @@ let CalendarService = class CalendarService {
             });
             this.loadCompleteCalendar(year, month, transactionsMap);
             this.calendarContainerSubject.next(this.transactionsCalendar);
+        }, error => {
+            var calendarErrorBuild = new TransactionsCalendarContainer();
+            calendarErrorBuild.isError = true;
+            calendarErrorBuild.exceptionAPI = error;
+            this.calendarContainerSubject.next(calendarErrorBuild);
         });
     }
     loadCompleteCalendar(year, month, transactionsMap) {

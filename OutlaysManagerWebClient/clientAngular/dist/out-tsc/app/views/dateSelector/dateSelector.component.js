@@ -2,6 +2,7 @@ import { __decorate } from "tslib";
 import { Component, EventEmitter, Output } from "@angular/core";
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
+import { ExceptionUtils } from "../../utils/exceptionUtils";
 let DateSelector = class DateSelector {
     constructor(outlayManagerAPI, mainApp) {
         this.outlayManagerAPI = outlayManagerAPI;
@@ -32,7 +33,7 @@ let DateSelector = class DateSelector {
             this.loadCurrentDateToView();
             this.updateCalendar();
         }, error => {
-            this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
+            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
     updateCalendar() {
@@ -54,15 +55,6 @@ let DateSelector = class DateSelector {
             messageView.verbose = VerboseType.Error;
             this.mainApp.openModalMessage(messageView);
         }
-    }
-    buildMessageErrorFromAPIError(error, action) {
-        var messageView = new MessageView();
-        messageView.action = action;
-        messageView.titleError = error.Message;
-        messageView.detail = "";
-        messageView.statusCode = error.StatusCode;
-        messageView.verbose = VerboseType.Error;
-        return messageView;
     }
     loadCurrentDateToView() {
         var today = new Date(Date.now());

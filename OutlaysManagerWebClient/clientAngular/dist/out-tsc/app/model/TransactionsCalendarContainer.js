@@ -4,6 +4,8 @@ export class TransactionsCalendarContainer {
         this.year = 0;
         this.month = 0;
         this.matrixCalendar = new Array();
+        this.isError = false;
+        this.exceptionAPI = undefined;
     }
 }
 export class TransacionCalendar {

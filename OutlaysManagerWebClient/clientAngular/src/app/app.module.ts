@@ -8,13 +8,14 @@ import { Analycer } from "./pages/analycer/analycer.component";
 import { Dashboard } from "./pages/dashboard/dashboard.component";
 import routerConfig from './router/router';
 import { CalendarService } from './services/calendar.service';
-import { OutlayManagerAPI } from './services/OutlayManagerAPI.service';
+import { OutlayManagerAPI } from './services/outlayManagerAPI.service';
 import { Calendar } from './views/calendar/calendar.component';
 import { DateSelector } from "./views/dateSelector/dateSelector.component";
 import { ResumeMonthTransactions } from './views/resumeMonthTransactions/resumeMonthTransactions.component';
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SavingChart } from "./views/savingChart/savingChart.component";
+import { Login } from "./pages/login/login.component";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SavingChart } from "./views/savingChart/savingChart.component";
         ResumeMonthTransactions,
         Dashboard,
         Analycer,
-        SavingChart
+        SavingChart,
+        Login
   ],
   imports: [
       BrowserModule,

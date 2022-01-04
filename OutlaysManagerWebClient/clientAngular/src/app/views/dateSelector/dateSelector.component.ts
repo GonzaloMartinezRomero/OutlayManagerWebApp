@@ -1,9 +1,9 @@
-﻿import { AfterViewInit, Component, EventEmitter, Injectable, OnInit, Output } from "@angular/core";
+﻿import { AfterViewInit, Component, EventEmitter, Output } from "@angular/core";
 import { AppComponent } from "../../app.component";
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { CalendarService } from "../../services/calendar.service";
-import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
+import { ExceptionUtils } from "../../utils/exceptionUtils";
 
 @Component(
     {
@@ -41,6 +41,7 @@ export class DateSelector implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+
         this.outlayManagerAPI.loadYearsAvailabes()
             .subscribe(response => {
                 this.yearsAvailables = response;
@@ -48,7 +49,7 @@ export class DateSelector implements AfterViewInit {
                 this.updateCalendar();
 
             }, error => {
-                this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load Years Availables"));
+                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
     }
 
@@ -78,19 +79,6 @@ export class DateSelector implements AfterViewInit {
 
             this.mainApp.openModalMessage(messageView);
         }
-    }
-
-    private buildMessageErrorFromAPIError(error:any, action:string): MessageView {
-
-        var messageView = new MessageView();
-
-        messageView.action = action;
-        messageView.titleError = error.Message;
-        messageView.detail = "";
-        messageView.statusCode = error.StatusCode;
-        messageView.verbose = VerboseType.Error;
-
-        return messageView;
     }
 
     private loadCurrentDateToView() {

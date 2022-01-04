@@ -2,7 +2,7 @@
 import { Subject } from "rxjs";
 import { TransactionDTO } from "../model/TransactionDTO";
 import { TransacionCalendar, TransactionsCalendarContainer } from "../model/TransactionsCalendarContainer";
-import { OutlayManagerAPI } from "./OutlayManagerAPI.service";
+import { OutlayManagerAPI } from "./outlayManagerAPI.service";
 
 
 @Injectable()
@@ -22,7 +22,8 @@ export class CalendarService {
 
         this.outlayManagerAPI.loadTransactions(year, month)
             .subscribe(response => {
-                
+
+                this.transactionsCalendar = new TransactionsCalendarContainer();
                 var transactionsMap = new Map<number, TransactionDTO[]>();
 
                 response.forEach(transactionAux => {
@@ -40,8 +41,15 @@ export class CalendarService {
                 });
 
                 this.loadCompleteCalendar(year, month, transactionsMap);
+                this.calendarContainerSubject.next(this.transactionsCalendar);
+                
+            }, error =>
+            {
+                var calendarErrorBuild: TransactionsCalendarContainer = new TransactionsCalendarContainer();
+                calendarErrorBuild.isError = true;
+                calendarErrorBuild.exceptionAPI = error;
 
-                this.calendarContainerSubject.next(this.transactionsCalendar);                
+                this.calendarContainerSubject.next(calendarErrorBuild);
             });
     }
 
@@ -142,5 +150,4 @@ export class CalendarService {
 
         return today.getFullYear() === year && today.getMonth() === (month - 1) && today.getDate() === dayNumber;
     }
-     
 }

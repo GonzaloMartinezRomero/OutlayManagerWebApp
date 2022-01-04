@@ -8,7 +8,7 @@ import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
 import { CalendarService } from "../../services/calendar.service";
-import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
 
 @Component(

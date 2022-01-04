@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
-import { OutlayManagerAPI } from "../../services/OutlayManagerAPI.service";
+import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 
 @Component(
     {

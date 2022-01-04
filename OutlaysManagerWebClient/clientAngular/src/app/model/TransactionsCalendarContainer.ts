@@ -1,4 +1,5 @@
-﻿import { TransactionDTO } from "./TransactionDTO";
+﻿import { ExceptionAPI } from "./ExceptionAPI";
+import { TransactionDTO } from "./TransactionDTO";
 
 export class TransactionsCalendarContainer {
 
@@ -6,6 +7,8 @@ export class TransactionsCalendarContainer {
     public year: number = 0;
     public month: number = 0;
     public matrixCalendar: Array<Array<TransacionCalendar>> = new Array<Array<TransacionCalendar>>();
+    public isError: boolean = false;
+    public exceptionAPI: any = undefined;
 
     constructor() {  }
 }

@@ -4,6 +4,7 @@ import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { TransactionTypes } from "../../model/TransactionTypes";
+import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
 import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 let Calendar = class Calendar {
@@ -25,7 +26,9 @@ let Calendar = class Calendar {
         this.transactionTypeMap = new Map();
         this.transactionCodesMap = new Map();
         this.newCodeTransaction = "";
-        this.calendarService.calendarContainerSubject.subscribe(response => { this.loadCalendar(response); });
+        this.calendarService.calendarContainerSubject.subscribe(response => {
+            this.loadCalendar(response);
+        });
     }
     ngOnInit() {
         this.outlayManagerService.loadTransactionTypeOutlays()
@@ -33,16 +36,21 @@ let Calendar = class Calendar {
             var arrayTypeTransaction = response;
             this.transactionTypeMap = new Map();
             arrayTypeTransaction.forEach(x => this.transactionTypeMap.set(x.type, x));
-        }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load transaction type outlays")); });
+        }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
         this.loadCodeListTransactions();
     }
     loadCalendar(transactionCalendarContainer) {
         var _a, _b;
-        //Update main class calendar
-        this.transactionsCalendar = transactionCalendarContainer;
-        //Update childs values
-        (_a = this.resumeMonthComponent) === null || _a === void 0 ? void 0 : _a.loadResumeTransactions(transactionCalendarContainer);
-        (_b = this.resumeOutlaysComponent) === null || _b === void 0 ? void 0 : _b.loadMonthResume(transactionCalendarContainer);
+        if (transactionCalendarContainer.isError) {
+            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(transactionCalendarContainer.exceptionAPI));
+        }
+        else {
+            //Update main class calendar
+            this.transactionsCalendar = transactionCalendarContainer;
+            //Update childs values
+            (_a = this.resumeMonthComponent) === null || _a === void 0 ? void 0 : _a.loadResumeTransactions(transactionCalendarContainer);
+            (_b = this.resumeOutlaysComponent) === null || _b === void 0 ? void 0 : _b.loadMonthResume(transactionCalendarContainer);
+        }
     }
     updateCalendarDate(dateCalendar) {
         this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
@@ -80,7 +88,7 @@ let Calendar = class Calendar {
             this.closeTransactionConfigurationModal();
             this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
         }, error => {
-            this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, operationType));
+            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
     closeTransactionConfigurationModal() {
@@ -96,7 +104,7 @@ let Calendar = class Calendar {
                 this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
                 this.closeTransactionConfigurationModal();
                 this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
-            }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, operationType)); });
+            }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
         }
         else {
             (_a = this.deleteConfirmationModalRef) === null || _a === void 0 ? void 0 : _a.close();
@@ -120,7 +128,7 @@ let Calendar = class Calendar {
                 .subscribe(response => {
                 this.loadCodeListTransactions();
             }, error => {
-                this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Delete code transaction"));
+                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
     }
     addTransactionCode(codeTransaction) {
@@ -130,7 +138,7 @@ let Calendar = class Calendar {
                 this.loadCodeListTransactions();
                 this.newCodeTransaction = "";
             }, error => {
-                this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Add code transaction"));
+                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
         }
         else {
@@ -143,7 +151,7 @@ let Calendar = class Calendar {
             var transactionCodeArray = response;
             this.transactionCodesMap = new Map();
             transactionCodeArray.forEach(x => this.transactionCodesMap.set(x.code, x));
-        }, error => { this.mainApp.openModalMessage(this.buildMessageErrorFromAPIError(error, "Load code list transactions")); });
+        }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
     }
     copyTransaction(transaction) {
         var transactionCopy = new TransactionDTO();
@@ -156,15 +164,6 @@ let Calendar = class Calendar {
         transactionCopy.typeTransaction = transaction.typeTransaction;
         transactionCopy.typeTransactionID = transaction.typeTransactionID;
         return transactionCopy;
-    }
-    buildMessageErrorFromAPIError(error, action) {
-        var messageView = new MessageView();
-        messageView.action = action;
-        messageView.titleError = error.Message;
-        messageView.detail = "Calling EndPoint: " + error.EndPoint;
-        messageView.statusCode = error.StatusCode;
-        messageView.verbose = VerboseType.Error;
-        return messageView;
     }
     buildMessageError(error, action) {
         var messageView = new MessageView();
