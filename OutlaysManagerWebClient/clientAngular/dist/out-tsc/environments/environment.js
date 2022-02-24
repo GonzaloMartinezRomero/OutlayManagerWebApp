@@ -2,7 +2,17 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 export const environment = {
-    production: false
+    production: false,
+    hostOutlayManagerAPI: "http://localhost:5000",
+    outlayManagerAPIEndpoints: {
+        Authorization: "/Identity/Authenticate",
+        Transactions: "/Transactions",
+        TransactionsCode: "/TransactionCodes",
+        TransactionsInfo: {
+            TransactionTypes: "/TransactionInfo/TransactionTypes",
+            TransactionYearsAvailables: "/TransactionInfo/YearsAvailables"
+        },
+    }
 };
 /*
  * For easier debugging in development mode, you can import the following file

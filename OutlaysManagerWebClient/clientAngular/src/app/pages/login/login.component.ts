@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
-import { Constants } from "../../utils/constants";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
+import { TokenStorage } from "../../utils/tokenStorage";
 
 @Component(
     {
@@ -22,12 +22,26 @@ export class Login{
 
     }
 
+    ngOnInit(): void {
+
+        var token: string = TokenStorage.getToken();
+       
+        if (token != null && token != "") {
+
+            this.outlayManagerAPI.isTokenValid(token).then(value =>
+            {
+                if (value) {
+                    this.router.navigateByUrl('Dashboard');
+                }
+            })
+        }
+    }
+
     public login() {
 
         this.outlayManagerAPI.requestJWTTokenAuthorization(this.userLogin, this.userPassword)
             .subscribe(response =>
             {
-
                 if (response.credentialToken === undefined || response.credentialToken === "") {
 
                     this.mainApp.openModalMessage(this.buildMsgErrorLogin());
@@ -36,7 +50,7 @@ export class Login{
 
                     try
                     {
-                        sessionStorage.setItem(Constants.TOKEN_OUTLAYMANAGER_ID, response.credentialToken);
+                        TokenStorage.setToken(response.credentialToken);
                         this.router.navigateByUrl('Dashboard');
 
                     } catch (exception){

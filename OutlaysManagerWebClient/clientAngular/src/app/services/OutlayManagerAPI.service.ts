@@ -2,6 +2,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { environment } from "../../environments/environment";
 import { ExceptionAPI } from "../model/ExceptionAPI";
 import { ResponseTransactionAPI } from "../model/ResponseTransactionAPI";
 import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
@@ -9,20 +10,17 @@ import { TransactionDTO } from "../model/TransactionDTO";
 import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
 import { AuthenticationToken } from "../model/UserCredentials/AuthenticationToken";
 import { UserCredential } from "../model/UserCredentials/UserCredential";
-import { Constants } from "../utils/constants";
+import { TokenStorage } from "../utils/tokenStorage";
 
 @Injectable()
 export class OutlayManagerAPI {
 
-    private readonly HOST: string = "http://localhost:5000/";
-
-    constructor(private httpClient: HttpClient) {
-
-    }
+    constructor(private httpClient: HttpClient) { }
 
     public loadAllTransactions(): Observable<TransactionDTO[]> {
 
-        var endPoint: string = this.HOST + "Transaction/All";
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions;
+
         var header: HttpHeaders = this.getHeader();
 
         return this.httpClient.get<TransactionDTO[]>(endPoint, { headers: header})
@@ -34,8 +32,9 @@ export class OutlayManagerAPI {
     }
 
     public loadTransactions(year: number, month: number): Observable<TransactionDTO[]>
-    {   
-        var endPoint: string = this.HOST + "Transaction?year=" + year + "&month=" + month;
+    {
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "?year=" + year + "&month=" + month;
+
         var header: HttpHeaders = this.getHeader();
 
         return this.httpClient.get<TransactionDTO[]>(endPoint, { headers: header })
@@ -48,7 +47,7 @@ export class OutlayManagerAPI {
 
     public loadTransactionsYear(year: number): Observable<TransactionDTO[]> {
 
-        var endPoint: string = this.HOST + "Transaction?year=" + year;
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "?year=" + year;
         var header: HttpHeaders = this.getHeader();
 
         return this.httpClient.get<TransactionDTO[]>(endPoint, { headers:header })
@@ -61,13 +60,13 @@ export class OutlayManagerAPI {
 
     public saveTransaction(transaction: TransactionDTO): Observable<ResponseTransactionAPI> {
 
-        var CRUDOperationURL = this.HOST + "Transaction";
+        var endpoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions;
         let transactionJSON = this.transactionToJSON(transaction);
         var header: HttpHeaders = this.getHeader();
 
         if (transaction.id === 0) {
 
-            return this.httpClient.post<ResponseTransactionAPI>(CRUDOperationURL, transactionJSON, { headers: header })
+            return this.httpClient.post<ResponseTransactionAPI>(endpoint, transactionJSON, { headers: header })
                 .pipe(catchError((e: any) => {
 
                     var exception = this.buildExceptionMessage(e, "Save");
@@ -76,7 +75,7 @@ export class OutlayManagerAPI {
         }
         else {
 
-            return this.httpClient.put<ResponseTransactionAPI>(CRUDOperationURL, transactionJSON, { headers: header })
+            return this.httpClient.put<ResponseTransactionAPI>(endpoint, transactionJSON, { headers: header })
                 .pipe(catchError((e: any) => {
 
                     var exception = this.buildExceptionMessage(e, "Save");
@@ -87,10 +86,10 @@ export class OutlayManagerAPI {
 
     public deleteTransaction(transactionID: number): Observable<ResponseTransactionAPI> {
 
-        var deleteTransactionURL = this.HOST + "Transaction" + "/" + transactionID;
+        var endpoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "/" + transactionID;
         var header: HttpHeaders = this.getHeader();
 
-        return this.httpClient.delete<ResponseTransactionAPI>(deleteTransactionURL, { headers: header })
+        return this.httpClient.delete<ResponseTransactionAPI>(endpoint, { headers: header })
             .pipe(catchError((e: any) => {
 
                 var exception = this.buildExceptionMessage(e, "Delete");
@@ -101,10 +100,9 @@ export class OutlayManagerAPI {
 
     public loadTransactionTypeOutlays(): Observable<Array<TypeTransactionDTO>> {
 
-        var endPoint = "TransactionInfo/TransactionTypes";
-        var requestURLParams = this.HOST + endPoint;
-
-        return this.httpClient.get<TypeTransactionDTO[]>(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.TransactionTypes;
+        
+        return this.httpClient.get<TypeTransactionDTO[]>(endPoint)
                               .pipe(catchError((e: any) => {
                               
                                   var exception = this.buildExceptionMessage(e, endPoint);
@@ -114,10 +112,9 @@ export class OutlayManagerAPI {
 
     public loadCodeListTransactions(): Observable<Array<TransactionCodeDTO>> {
 
-        var endPoint = "TransactionInfo/TransactionCodes";
-        var requestURLParams = this.HOST + endPoint;
-
-        return this.httpClient.get<TransactionCodeDTO[]>(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode;
+        
+        return this.httpClient.get<TransactionCodeDTO[]>(endPoint)
             .pipe(catchError((e: any) => {
 
                 var exception = this.buildExceptionMessage(e, endPoint);
@@ -127,10 +124,9 @@ export class OutlayManagerAPI {
 
     public loadYearsAvailabes(): Observable<Array<number>> {
 
-        var endPoint = "TransactionInfo/YearsAvailabes";
-        var requestURLParams = this.HOST + endPoint;
-
-        return this.httpClient.get<number[]>(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.TransactionYearsAvailables;
+       
+        return this.httpClient.get<number[]>(endPoint)
                               .pipe(catchError((e: any) => {
 
                                   var exception = this.buildExceptionMessage(e, endPoint);
@@ -140,10 +136,10 @@ export class OutlayManagerAPI {
 
     public deleteTransactionCode(transactionCodeID: number): Observable<any> {
 
-        var deleteTransactionCodeURL = this.HOST + "Transaction/TransactionCode/" + transactionCodeID;
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode + "/" + transactionCodeID;
         var header: HttpHeaders = this.getHeader();
 
-        return this.httpClient.delete<any>(deleteTransactionCodeURL, { headers: header })
+        return this.httpClient.delete<any>(endPoint, { headers: header })
             .pipe(catchError((e: any) => {
 
                 var exception = this.buildExceptionMessage(e, "DeleteTransactionCode");
@@ -153,7 +149,7 @@ export class OutlayManagerAPI {
 
     public addTransactionCode(transactionCode: string):Observable<any> {
 
-        var endPoint = this.HOST + "Transaction/TransactionCode";
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode;
         let transactionCodeJSON = this.transactionCodeToJSON(transactionCode);
         var header: HttpHeaders = this.getHeader();
 
@@ -167,7 +163,7 @@ export class OutlayManagerAPI {
 
     public requestJWTTokenAuthorization(userLogin: string, password: string): Observable<AuthenticationToken> {
 
-        var endPoint: string = this.HOST + "Identity/Authenticate";
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Authorization;
         let header = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
         let body = new UserCredential();
         body.userName = userLogin;
@@ -181,6 +177,31 @@ export class OutlayManagerAPI {
             }));
     }
 
+    public async isTokenValid(token: string): Promise<boolean> {
+
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "/1";
+        var header: HttpHeaders = this.getHeader();
+
+        var tokenIsValid: boolean = false;
+
+        try {
+
+            var result = await this.httpClient.get<any>(endPoint, { headers: header })
+                .pipe(catchError((e: any) => {
+                    throw new ExceptionAPI();
+                }))
+                .toPromise();
+
+            var tokenIsValid: boolean = result != null;
+        }
+        catch (exception: any)
+        {
+            console.error("Token is not valid");
+        }
+
+        return tokenIsValid;
+    }
+
     private buildExceptionMessage(exceptionAPI: any, endPoint: string): ExceptionAPI {
 
         var exception = new ExceptionAPI();
@@ -189,7 +210,7 @@ export class OutlayManagerAPI {
 
         switch (exceptionAPI.status) {
             case 0:
-                exception.Message = "API service not available calling to " + this.HOST;
+                exception.Message = "API service not available calling to " + environment.hostOutlayManagerAPI;
                 break;
             case 500:
                 exception.Message = exceptionAPI.detail;
@@ -199,6 +220,9 @@ export class OutlayManagerAPI {
                 break;
             case 401:
                 exception.Message = "Unauthorized";
+                break;
+            case 400:
+                exception.Message = "Bad Request";
                 break;
             default:
                 exception.Message = "Error trying access to API";
@@ -223,7 +247,7 @@ export class OutlayManagerAPI {
 
     private getHeader(): HttpHeaders {
 
-        var token: string | null = sessionStorage.getItem(Constants.TOKEN_OUTLAYMANAGER_ID);
+        var token: string | null = TokenStorage.getToken();
         var httpHeader: HttpHeaders;
 
         if (token != null && token != "") {

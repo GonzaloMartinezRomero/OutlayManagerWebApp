@@ -1,8 +1,8 @@
 import { __decorate } from "tslib";
 import { Component } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { Constants } from "../../utils/constants";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
+import { TokenStorage } from "../../utils/tokenStorage";
 let Login = class Login {
     constructor(outlayManagerAPI, mainApp, router) {
         this.outlayManagerAPI = outlayManagerAPI;
@@ -11,17 +11,25 @@ let Login = class Login {
         this.userLogin = "";
         this.userPassword = "";
     }
+    ngOnInit() {
+        var token = TokenStorage.getToken();
+        if (token != null && token != "") {
+            this.outlayManagerAPI.isTokenValid(token).then(value => {
+                if (value) {
+                    this.router.navigateByUrl('Dashboard');
+                }
+            });
+        }
+    }
     login() {
         this.outlayManagerAPI.requestJWTTokenAuthorization(this.userLogin, this.userPassword)
             .subscribe(response => {
-            console.log("RESPONSE");
-            console.log(response);
             if (response.credentialToken === undefined || response.credentialToken === "") {
                 this.mainApp.openModalMessage(this.buildMsgErrorLogin());
             }
             else {
                 try {
-                    sessionStorage.setItem(Constants.TOKEN_OUTLAYMANAGER_ID, response.credentialToken);
+                    TokenStorage.setToken(response.credentialToken);
                     this.router.navigateByUrl('Dashboard');
                 }
                 catch (exception) {

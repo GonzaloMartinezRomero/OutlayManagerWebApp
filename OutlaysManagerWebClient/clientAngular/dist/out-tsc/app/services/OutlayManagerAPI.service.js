@@ -2,16 +2,16 @@ import { __decorate } from "tslib";
 import { HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
+import { environment } from "../../environments/environment";
 import { ExceptionAPI } from "../model/ExceptionAPI";
 import { UserCredential } from "../model/UserCredentials/UserCredential";
-import { Constants } from "../utils/constants";
+import { TokenStorage } from "../utils/tokenStorage";
 let OutlayManagerAPI = class OutlayManagerAPI {
     constructor(httpClient) {
         this.httpClient = httpClient;
-        this.HOST = "http://localhost:5000/";
     }
     loadAllTransactions() {
-        var endPoint = this.HOST + "Transaction/All";
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions;
         var header = this.getHeader();
         return this.httpClient.get(endPoint, { headers: header })
             .pipe(catchError((ex) => {
@@ -20,7 +20,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadTransactions(year, month) {
-        var endPoint = this.HOST + "Transaction?year=" + year + "&month=" + month;
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "?year=" + year + "&month=" + month;
         var header = this.getHeader();
         return this.httpClient.get(endPoint, { headers: header })
             .pipe(catchError((ex) => {
@@ -29,7 +29,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     loadTransactionsYear(year) {
-        var endPoint = this.HOST + "Transaction?year=" + year;
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "?year=" + year;
         var header = this.getHeader();
         return this.httpClient.get(endPoint, { headers: header })
             .pipe(catchError((ex) => {
@@ -38,18 +38,18 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     saveTransaction(transaction) {
-        var CRUDOperationURL = this.HOST + "Transaction";
+        var endpoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions;
         let transactionJSON = this.transactionToJSON(transaction);
         var header = this.getHeader();
         if (transaction.id === 0) {
-            return this.httpClient.post(CRUDOperationURL, transactionJSON, { headers: header })
+            return this.httpClient.post(endpoint, transactionJSON, { headers: header })
                 .pipe(catchError((e) => {
                 var exception = this.buildExceptionMessage(e, "Save");
                 throw exception;
             }));
         }
         else {
-            return this.httpClient.put(CRUDOperationURL, transactionJSON, { headers: header })
+            return this.httpClient.put(endpoint, transactionJSON, { headers: header })
                 .pipe(catchError((e) => {
                 var exception = this.buildExceptionMessage(e, "Save");
                 throw exception;
@@ -57,52 +57,49 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }
     }
     deleteTransaction(transactionID) {
-        var deleteTransactionURL = this.HOST + "Transaction" + "/" + transactionID;
+        var endpoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "/" + transactionID;
         var header = this.getHeader();
-        return this.httpClient.delete(deleteTransactionURL, { headers: header })
+        return this.httpClient.delete(endpoint, { headers: header })
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, "Delete");
             throw exception;
         }));
     }
     loadTransactionTypeOutlays() {
-        var endPoint = "TransactionInfo/TransactionTypes";
-        var requestURLParams = this.HOST + endPoint;
-        return this.httpClient.get(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.TransactionTypes;
+        return this.httpClient.get(endPoint)
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, endPoint);
             throw exception;
         }));
     }
     loadCodeListTransactions() {
-        var endPoint = "TransactionInfo/TransactionCodes";
-        var requestURLParams = this.HOST + endPoint;
-        return this.httpClient.get(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode;
+        return this.httpClient.get(endPoint)
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, endPoint);
             throw exception;
         }));
     }
     loadYearsAvailabes() {
-        var endPoint = "TransactionInfo/YearsAvailabes";
-        var requestURLParams = this.HOST + endPoint;
-        return this.httpClient.get(requestURLParams)
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.TransactionYearsAvailables;
+        return this.httpClient.get(endPoint)
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, endPoint);
             throw exception;
         }));
     }
     deleteTransactionCode(transactionCodeID) {
-        var deleteTransactionCodeURL = this.HOST + "Transaction/TransactionCode/" + transactionCodeID;
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode + "/" + transactionCodeID;
         var header = this.getHeader();
-        return this.httpClient.delete(deleteTransactionCodeURL, { headers: header })
+        return this.httpClient.delete(endPoint, { headers: header })
             .pipe(catchError((e) => {
             var exception = this.buildExceptionMessage(e, "DeleteTransactionCode");
             throw exception;
         }));
     }
     addTransactionCode(transactionCode) {
-        var endPoint = this.HOST + "Transaction/TransactionCode";
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsCode;
         let transactionCodeJSON = this.transactionCodeToJSON(transactionCode);
         var header = this.getHeader();
         return this.httpClient.post(endPoint, transactionCodeJSON, { headers: header })
@@ -112,7 +109,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }));
     }
     requestJWTTokenAuthorization(userLogin, password) {
-        var endPoint = this.HOST + "Identity/Authenticate";
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Authorization;
         let header = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
         let body = new UserCredential();
         body.userName = userLogin;
@@ -123,13 +120,30 @@ let OutlayManagerAPI = class OutlayManagerAPI {
             throw exception;
         }));
     }
+    async isTokenValid(token) {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "/1";
+        var header = this.getHeader();
+        var tokenIsValid = false;
+        try {
+            var result = await this.httpClient.get(endPoint, { headers: header })
+                .pipe(catchError((e) => {
+                throw new ExceptionAPI();
+            }))
+                .toPromise();
+            var tokenIsValid = result != null;
+        }
+        catch (exception) {
+            console.error("Token is not valid");
+        }
+        return tokenIsValid;
+    }
     buildExceptionMessage(exceptionAPI, endPoint) {
         var exception = new ExceptionAPI();
         exception.EndPoint = endPoint;
         exception.StatusCode = exceptionAPI.status;
         switch (exceptionAPI.status) {
             case 0:
-                exception.Message = "API service not available calling to " + this.HOST;
+                exception.Message = "API service not available calling to " + environment.hostOutlayManagerAPI;
                 break;
             case 500:
                 exception.Message = exceptionAPI.detail;
@@ -139,6 +153,9 @@ let OutlayManagerAPI = class OutlayManagerAPI {
                 break;
             case 401:
                 exception.Message = "Unauthorized";
+                break;
+            case 400:
+                exception.Message = "Bad Request";
                 break;
             default:
                 exception.Message = "Error trying access to API";
@@ -155,7 +172,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         return JSON.stringify(transactionCodeJSON);
     }
     getHeader() {
-        var token = sessionStorage.getItem(Constants.TOKEN_OUTLAYMANAGER_ID);
+        var token = TokenStorage.getToken();
         var httpHeader;
         if (token != null && token != "") {
             httpHeader = new HttpHeaders({ "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br", "Authorization": "Bearer " + token });
