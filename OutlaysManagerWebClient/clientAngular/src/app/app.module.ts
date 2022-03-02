@@ -16,6 +16,7 @@ import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SavingChart } from "./views/savingChart/savingChart.component";
 import { Login } from "./pages/login/login.component";
+import { AmountResumes } from "./views/amountResumes/amountResumes.component";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { Login } from "./pages/login/login.component";
         Dashboard,
         Analycer,
         SavingChart,
-        Login
+        Login,
+        AmountResumes
   ],
   imports: [
       BrowserModule,

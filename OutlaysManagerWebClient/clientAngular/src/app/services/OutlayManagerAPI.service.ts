@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { environment } from "../../environments/environment";
+import { AmountResume } from "../model/AmountResume";
 import { ExceptionAPI } from "../model/ExceptionAPI";
 import { ResponseTransactionAPI } from "../model/ResponseTransactionAPI";
 import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
@@ -54,6 +55,19 @@ export class OutlayManagerAPI {
             .pipe(catchError((ex: any) => {
 
                 var exception = this.buildExceptionMessage(ex, "Get transactions");
+                throw exception;
+            }));
+    }
+
+    public loadAmountResumes(): Observable<AmountResume[]> {
+
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.AmountResumes;
+        var header: HttpHeaders = this.getHeader();
+
+        return this.httpClient.get<AmountResume[]>(endPoint, { headers: header })
+            .pipe(catchError((ex: any) => {
+
+                var exception = this.buildExceptionMessage(ex, "Get Amount Resume");
                 throw exception;
             }));
     }
@@ -192,7 +206,7 @@ export class OutlayManagerAPI {
                 }))
                 .toPromise();
 
-            var tokenIsValid: boolean = result != null;
+            tokenIsValid = (result != null);
         }
         catch (exception: any)
         {

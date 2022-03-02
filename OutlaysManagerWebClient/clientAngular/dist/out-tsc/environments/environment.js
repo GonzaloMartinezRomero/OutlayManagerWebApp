@@ -10,7 +10,8 @@ export const environment = {
         TransactionsCode: "/TransactionCodes",
         TransactionsInfo: {
             TransactionTypes: "/TransactionInfo/TransactionTypes",
-            TransactionYearsAvailables: "/TransactionInfo/YearsAvailables"
+            TransactionYearsAvailables: "/TransactionInfo/YearsAvailables",
+            AmountResumes: "/TransactionInfo/AmountResumes"
         },
     }
 };

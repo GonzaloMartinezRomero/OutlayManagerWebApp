@@ -37,6 +37,15 @@ let OutlayManagerAPI = class OutlayManagerAPI {
             throw exception;
         }));
     }
+    loadAmountResumes() {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.AmountResumes;
+        var header = this.getHeader();
+        return this.httpClient.get(endPoint, { headers: header })
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Get Amount Resume");
+            throw exception;
+        }));
+    }
     saveTransaction(transaction) {
         var endpoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions;
         let transactionJSON = this.transactionToJSON(transaction);
@@ -130,7 +139,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
                 throw new ExceptionAPI();
             }))
                 .toPromise();
-            var tokenIsValid = result != null;
+            tokenIsValid = (result != null);
         }
         catch (exception) {
             console.error("Token is not valid");
