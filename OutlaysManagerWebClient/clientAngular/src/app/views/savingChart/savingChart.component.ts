@@ -51,10 +51,10 @@ export class SavingChart implements OnInit {
         // We use these empty structures as placeholders for dynamic theming.
         scales: {
             x: {
-                stacked: true
+               
             },
             y: {
-                stacked: true
+                
             }
         },
         plugins: {

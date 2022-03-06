@@ -19,12 +19,8 @@ let SavingChart = class SavingChart {
             responsive: true,
             // We use these empty structures as placeholders for dynamic theming.
             scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                    stacked: true
-                }
+                x: {},
+                y: {}
             },
             plugins: {
                 legend: {
