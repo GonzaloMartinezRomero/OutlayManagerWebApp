@@ -1,15 +1,15 @@
-﻿import { ApplicationRef, Component, ElementRef, NgZone, OnInit, ViewChild } from "@angular/core";
-import { ChartConfiguration, ChartData, ChartEvent, ChartType } from "chart.js";
+﻿import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
+import { ChartConfiguration, ChartData, ChartType } from "chart.js";
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from "ng2-charts";
 import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
-import { TransactionTypes } from "../../model/TransactionTypes";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
-import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { TransactionTypes } from "../../utils/TransactionTypes";
+import { ResumeMonthTransaction } from "../resumeMonthTransaction/resumeMonthTransaction.component";
 
 @Component(
     {
@@ -24,7 +24,8 @@ export class SavingChart implements OnInit {
         "July", "August", "September", "October", "November", "December"];
 
     @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-    @ViewChild(ResumeMonthTransactions) resumeMonthComponent: ResumeMonthTransactions | undefined;  
+    @ViewChild("expenses") resumeMonthExpensesComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("incomings") resumeMonthIncomingComponent: ResumeMonthTransaction | undefined;
 
     public yearSelected: number = 0;
     public yearsAvailables: Array<number> = new Array<number>();
@@ -98,7 +99,8 @@ export class SavingChart implements OnInit {
 
     public updateResumeMonthTransactions(calendarContainer: TransactionsCalendarContainer) {
         
-        this.resumeMonthComponent?.loadResumeTransactions(calendarContainer);
+        this.resumeMonthExpensesComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, true);
+        this.resumeMonthIncomingComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, false);
     }
 
     public clearChart(): void {

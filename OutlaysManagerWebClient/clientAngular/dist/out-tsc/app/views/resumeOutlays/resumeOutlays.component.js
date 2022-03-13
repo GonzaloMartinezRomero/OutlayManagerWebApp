@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Component } from "@angular/core";
-import { TransactionTypes } from "../../model/TransactionTypes";
+import { TransactionTypes } from "../../utils/TransactionTypes";
 let ResumeOutlays = class ResumeOutlays {
     constructor(apiService) {
         this.apiService = apiService;

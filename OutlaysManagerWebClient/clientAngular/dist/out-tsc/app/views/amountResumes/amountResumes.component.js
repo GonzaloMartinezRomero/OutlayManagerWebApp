@@ -44,7 +44,6 @@ let AmountResumes = class AmountResumes {
             ],
             labels: this.dateLabels
         };
-        console.log("entra en el ctor");
     }
     ngOnInit() {
         this.outlayAPIService.loadAmountResumes()

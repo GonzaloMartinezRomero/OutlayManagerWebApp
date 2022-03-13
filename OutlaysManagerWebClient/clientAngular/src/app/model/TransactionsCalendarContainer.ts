@@ -1,5 +1,4 @@
-﻿import { ExceptionAPI } from "./ExceptionAPI";
-import { TransactionDTO } from "./TransactionDTO";
+﻿import { TransactionDTO } from "./TransactionDTO";
 
 export class TransactionsCalendarContainer {
 

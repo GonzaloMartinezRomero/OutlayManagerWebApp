@@ -16,9 +16,9 @@
     </div>
     <br />
     <div class="row">
-        <div class="col-8">
+        <div class="col-5">
             <h3>Savings Resume</h3>            
-                <canvas baseChart width="1500" height="700"
+                <canvas baseChart width="1000" height="700"
                         [data]="barChartData"
                         [options]="barChartOptions"
                         [plugins]="barChartPlugins"
@@ -27,7 +27,12 @@
                 </canvas>           
         </div>
         <div class="col-4">
-            <resumeMonthTransactions></resumeMonthTransactions>
+           <h3>Expenses</h3>          
+            <resumeMonthTransaction #expenses></resumeMonthTransaction>            
+        </div>
+        <div class="col-3">
+            <h3>Incomings</h3>
+            <resumeMonthTransaction #incomings></resumeMonthTransaction>
         </div>
     </div>
 </div>

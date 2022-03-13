@@ -43,7 +43,7 @@ export class AmountResumes implements OnInit {
     private dateLabels: Array<string> = new Array<string>();
     private amountDataSet: Array<number> = new Array<number>();
 
-    constructor(private outlayAPIService: OutlayManagerAPI) { console.log("entra en el ctor"); }
+    constructor(private outlayAPIService: OutlayManagerAPI) { }
 
     ngOnInit(): void {
 

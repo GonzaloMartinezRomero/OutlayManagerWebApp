@@ -3,9 +3,8 @@ import { Component, ViewChild } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
-import { TransactionTypes } from "../../model/TransactionTypes";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
-import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { TransactionTypes } from "../../utils/TransactionTypes";
 import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 let Calendar = class Calendar {
     constructor(calendarService, outlayManagerService, modalABM, mainApp) {
@@ -40,7 +39,7 @@ let Calendar = class Calendar {
         this.loadCodeListTransactions();
     }
     loadCalendar(transactionCalendarContainer) {
-        var _a, _b;
+        var _a, _b, _c;
         if (transactionCalendarContainer.isError) {
             this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(transactionCalendarContainer.exceptionAPI));
         }
@@ -48,8 +47,9 @@ let Calendar = class Calendar {
             //Update main class calendar
             this.transactionsCalendar = transactionCalendarContainer;
             //Update childs values
-            (_a = this.resumeMonthComponent) === null || _a === void 0 ? void 0 : _a.loadResumeTransactions(transactionCalendarContainer);
-            (_b = this.resumeOutlaysComponent) === null || _b === void 0 ? void 0 : _b.loadMonthResume(transactionCalendarContainer);
+            (_a = this.resumeMonthExpensesComponent) === null || _a === void 0 ? void 0 : _a.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, true);
+            (_b = this.resumeMonthIncomingsComponent) === null || _b === void 0 ? void 0 : _b.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, false);
+            (_c = this.resumeOutlaysComponent) === null || _c === void 0 ? void 0 : _c.loadMonthResume(transactionCalendarContainer);
         }
     }
     updateCalendarDate(dateCalendar) {
@@ -183,8 +183,11 @@ let Calendar = class Calendar {
     }
 };
 __decorate([
-    ViewChild(ResumeMonthTransactions)
-], Calendar.prototype, "resumeMonthComponent", void 0);
+    ViewChild("resumeMonthTransactionExpenses")
+], Calendar.prototype, "resumeMonthExpensesComponent", void 0);
+__decorate([
+    ViewChild("resumeMonthTransactionIncomings")
+], Calendar.prototype, "resumeMonthIncomingsComponent", void 0);
 __decorate([
     ViewChild(ResumeOutlays)
 ], Calendar.prototype, "resumeOutlaysComponent", void 0);

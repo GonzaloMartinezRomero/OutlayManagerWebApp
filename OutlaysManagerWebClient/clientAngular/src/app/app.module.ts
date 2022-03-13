@@ -11,12 +11,12 @@ import { CalendarService } from './services/calendar.service';
 import { OutlayManagerAPI } from './services/outlayManagerAPI.service';
 import { Calendar } from './views/calendar/calendar.component';
 import { DateSelector } from "./views/dateSelector/dateSelector.component";
-import { ResumeMonthTransactions } from './views/resumeMonthTransactions/resumeMonthTransactions.component';
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SavingChart } from "./views/savingChart/savingChart.component";
 import { Login } from "./pages/login/login.component";
 import { AmountResumes } from "./views/amountResumes/amountResumes.component";
+import { ResumeMonthTransaction } from "./views/resumeMonthTransaction/resumeMonthTransaction.component";
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { AmountResumes } from "./views/amountResumes/amountResumes.component";
         DateSelector,
         Calendar,
         ResumeOutlays,
-        ResumeMonthTransactions,
+        ResumeMonthTransaction,
         Dashboard,
         Analycer,
         SavingChart,

@@ -6,14 +6,13 @@ import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionCodeDTO } from "../../model/TransactionCodeDTO";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
-import { TransactionTypes } from "../../model/TransactionTypes";
 import { TypeTransactionDTO } from "../../model/TypeTransactionDTO";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
-import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { TransactionTypes } from "../../utils/TransactionTypes";
+import { ResumeMonthTransaction } from "../resumeMonthTransaction/resumeMonthTransaction.component";
 import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
-
 
 @Component(
     {
@@ -24,7 +23,8 @@ import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 
 export class Calendar implements OnInit {
 
-    @ViewChild(ResumeMonthTransactions) resumeMonthComponent: ResumeMonthTransactions | undefined;
+    @ViewChild("resumeMonthTransactionExpenses") resumeMonthExpensesComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("resumeMonthTransactionIncomings") resumeMonthIncomingsComponent: ResumeMonthTransaction | undefined;
     @ViewChild(ResumeOutlays) resumeOutlaysComponent: ResumeOutlays | undefined;
 
     private deleteConfirmationModalRef?: NgbModalRef = undefined;
@@ -80,7 +80,8 @@ export class Calendar implements OnInit {
             this.transactionsCalendar = transactionCalendarContainer;
 
             //Update childs values
-            this.resumeMonthComponent?.loadResumeTransactions(transactionCalendarContainer);
+            this.resumeMonthExpensesComponent?.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, true);
+            this.resumeMonthIncomingsComponent?.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, false);
             this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer);
         }
     }

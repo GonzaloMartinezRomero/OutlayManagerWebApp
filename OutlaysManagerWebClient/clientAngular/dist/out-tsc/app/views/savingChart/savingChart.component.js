@@ -3,8 +3,7 @@ import { Component, ViewChild } from "@angular/core";
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from "ng2-charts";
 import { MessageView, VerboseType } from "../../model/MessageView";
-import { TransactionTypes } from "../../model/TransactionTypes";
-import { ResumeMonthTransactions } from "../resumeMonthTransactions/resumeMonthTransactions.component";
+import { TransactionTypes } from "../../utils/TransactionTypes";
 let SavingChart = class SavingChart {
     constructor(outlayAPIService, mainApp, calendarService, angularZone) {
         this.outlayAPIService = outlayAPIService;
@@ -64,8 +63,9 @@ let SavingChart = class SavingChart {
         }
     }
     updateResumeMonthTransactions(calendarContainer) {
-        var _a;
-        (_a = this.resumeMonthComponent) === null || _a === void 0 ? void 0 : _a.loadResumeTransactions(calendarContainer);
+        var _a, _b;
+        (_a = this.resumeMonthExpensesComponent) === null || _a === void 0 ? void 0 : _a.loadTransactionsResume(calendarContainer.year, calendarContainer.month, true);
+        (_b = this.resumeMonthIncomingComponent) === null || _b === void 0 ? void 0 : _b.loadTransactionsResume(calendarContainer.year, calendarContainer.month, false);
     }
     clearChart() {
         var _a;
@@ -134,8 +134,11 @@ __decorate([
     ViewChild(BaseChartDirective)
 ], SavingChart.prototype, "chart", void 0);
 __decorate([
-    ViewChild(ResumeMonthTransactions)
-], SavingChart.prototype, "resumeMonthComponent", void 0);
+    ViewChild("expenses")
+], SavingChart.prototype, "resumeMonthExpensesComponent", void 0);
+__decorate([
+    ViewChild("incomings")
+], SavingChart.prototype, "resumeMonthIncomingComponent", void 0);
 SavingChart = __decorate([
     Component({
         selector: "savingChart",
