@@ -216,6 +216,23 @@ export class OutlayManagerAPI {
         return tokenIsValid;
     }
 
+    public downloadRemoteTransaction(): Observable<TransactionDTO[]> {
+
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
+
+        var header: HttpHeaders = this.getHeader();
+
+        console.log(endPoint);
+        console.log(header);
+
+        return this.httpClient.get<TransactionDTO[]>(endPoint, { headers: header })
+            .pipe(catchError((ex: any) => {
+
+                var exception = this.buildExceptionMessage(ex, "Download remote transactions");
+                throw exception;
+            }));
+    }
+
     private buildExceptionMessage(exceptionAPI: any, endPoint: string): ExceptionAPI {
 
         var exception = new ExceptionAPI();

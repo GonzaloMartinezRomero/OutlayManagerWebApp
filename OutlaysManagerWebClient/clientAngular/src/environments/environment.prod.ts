@@ -10,5 +10,6 @@ export const environment = {
             TransactionYearsAvailables: "/TransactionInfo/YearsAvailables",
             AmountResumes: "/TransactionInfo/AmountResumes"
         },
+        DownloadExternalTransaction: "/ExternalTransaction/Download"
     }
 };

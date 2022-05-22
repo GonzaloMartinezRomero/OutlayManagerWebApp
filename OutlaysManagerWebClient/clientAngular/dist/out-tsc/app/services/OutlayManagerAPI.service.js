@@ -146,6 +146,15 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }
         return tokenIsValid;
     }
+    downloadRemoteTransaction() {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
+        var header = this.getHeader();
+        return this.httpClient.get(endPoint, { headers: header })
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Download remote transactions");
+            throw exception;
+        }));
+    }
     buildExceptionMessage(exceptionAPI, endPoint) {
         var exception = new ExceptionAPI();
         exception.EndPoint = endPoint;

@@ -7,11 +7,16 @@
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item text-center">
                     <a routerLink="../Analycer" class="nav-link active">
-                       Analycer
+                        Analycer
                     </a>
-                </li>
+                </li>            
             </ul>
             <hr>
+            <ul class="nav nav-pills flex-column mb-auto">                
+                <li class="nav-item text-center">
+                    <button class="nav-link active" (click)="downloadRemoteTransactions()">Sync Transactions</button>                
+                </li>
+            </ul>
         </div>
         <div class="col-11">
             <calendar></calendar>

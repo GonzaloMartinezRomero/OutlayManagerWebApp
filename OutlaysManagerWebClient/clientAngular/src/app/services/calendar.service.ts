@@ -68,7 +68,10 @@ export class CalendarService {
         var daysInMonth = new Date(year, month, 0).getDate();
 
         var strDate = year.toString() + "/" + month.toString() + "/01";
-        var initialDay = (new Date(strDate).getDay() - 1) % 7;
+        var initialDay = (new Date(strDate).getDay() - 1) % 7; //Se normaliza con -1 porque los dias empiezan desde el domingo 
+        //Bug: Cuando el dia de inicio del mes es domingo se queda como -1 
+        if (initialDay < 0)
+            initialDay = 6;//Domingo
 
         var firstWeekComplete = false;
 
