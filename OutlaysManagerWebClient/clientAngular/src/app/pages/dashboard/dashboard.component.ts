@@ -1,8 +1,7 @@
-﻿import { Component } from "@angular/core";
-import { AppComponent } from "../../app.component";
-import { MessageView } from "../../model/MessageView";
-import { TransactionDTO } from "../../model/TransactionDTO";
+﻿import { Component, ElementRef, ViewChild } from "@angular/core";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
+import { Calendar } from "../../views/calendar/calendar.component";
 
 @Component(
     {
@@ -13,19 +12,32 @@ import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 
 export class Dashboard{
 
-    constructor(private outlayManagerApiService: OutlayManagerAPI, private mainApp: AppComponent ) {
+    @ViewChild('loadingComponent') mymodal: ElementRef | undefined;
+    public updatedTransactions: string = "Ninguna";
+    public loadingModal?: NgbModalRef | undefined;
+    @ViewChild("calendar") calendarComponent: Calendar | undefined;
+
+    constructor(private outlayManagerApiService: OutlayManagerAPI, private modalABM: NgbModal) {
 
     }
 
     public downloadRemoteTransactions():void {
-        //Mejor meter este servicio dentro del calendar component para poder recargarlo al tener los datos
+
+        console.log("Dandolo a la vaina");
+
+        this.loadingModal = this.modalABM.open(this.mymodal);
+
+        console.log(this.loadingModal);
+
         this.outlayManagerApiService.downloadRemoteTransaction().subscribe(result =>
         {
-            var messageView: MessageView = new MessageView();
+            this.calendarComponent?.updateCalendarDate(null);
 
-            messageView.detail = "Added " + result.length + " transactions";
-
-            this.mainApp.openModalMessage(messageView);
+            this.updatedTransactions = "pues ya esta";            
         });
+    }
+
+    public confirm(): void{
+        this.loadingModal?.close();
     }
 }

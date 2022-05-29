@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from "rxjs/operators";
 import { AppComponent } from "../../app.component";
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
@@ -45,10 +46,13 @@ export class Calendar implements OnInit {
 
     public newCodeTransaction: string = "";
 
-    constructor(public calendarService: CalendarService, private outlayManagerService: OutlayManagerAPI, private modalABM: NgbModal,
+    private loading: boolean = false;
+
+    constructor(public calendarService: CalendarService, private outlayManagerApiService: OutlayManagerAPI, private modalABM: NgbModal,
                 private mainApp: AppComponent)
     {
-        this.calendarService.calendarContainerSubject.subscribe(response =>
+        this.calendarService.calendarContainerSubject
+                            .subscribe(response =>
         {
             this.loadCalendar(response);
         });
@@ -56,7 +60,7 @@ export class Calendar implements OnInit {
 
     ngOnInit(): void {
 
-        this.outlayManagerService.loadTransactionTypeOutlays()
+        this.outlayManagerApiService.loadTransactionTypeOutlays()
             .subscribe(response => {
                 var arrayTypeTransaction: Array<TypeTransactionDTO> = response;
 
@@ -86,9 +90,17 @@ export class Calendar implements OnInit {
         }
     }
 
-    public updateCalendarDate(dateCalendar: DateCalendar) {
-        
-       this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
+    public updateCalendarDate(dateCalendar: DateCalendar|null) {
+
+        //If not specified nothing reload calendar with the latest date
+        if (dateCalendar == null) {
+
+            this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
+
+        } else {
+            
+            this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
+        }
     }
 
     public openTransactionConfigModal(modalTemplate: any, transaction: TransactionDTO | undefined, day: number | undefined) {
@@ -131,7 +143,7 @@ export class Calendar implements OnInit {
         this.transactionView.codeTransactionID = transactionCodeID;
         this.transactionView.typeTransactionID = transactionTypeID;
 
-        this.outlayManagerService.saveTransaction(this.transactionView)
+        this.outlayManagerApiService.saveTransaction(this.transactionView)
             .subscribe(response => {
 
                 this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
@@ -155,7 +167,7 @@ export class Calendar implements OnInit {
             const operationType: string = "Delete Transaction";
             var transactionID: number = this.transactionView.id;
 
-            this.outlayManagerService.deleteTransaction(transactionID)
+            this.outlayManagerApiService.deleteTransaction(transactionID)
                 .subscribe(response => {
                     
                     this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
@@ -191,7 +203,7 @@ export class Calendar implements OnInit {
     public deleteTransactionCode(codeID: number) {
 
         if (codeID > 0)
-            this.outlayManagerService.deleteTransactionCode(codeID)
+            this.outlayManagerApiService.deleteTransactionCode(codeID)
                 .subscribe(response => {
                     
                     this.loadCodeListTransactions();
@@ -206,7 +218,7 @@ export class Calendar implements OnInit {
 
         if (codeTransaction?.length > 0) {
 
-            this.outlayManagerService.addTransactionCode(codeTransaction)
+            this.outlayManagerApiService.addTransactionCode(codeTransaction)
                 .subscribe(response => {                    
                     this.loadCodeListTransactions();
                     this.newCodeTransaction = "";
@@ -223,7 +235,7 @@ export class Calendar implements OnInit {
 
     private loadCodeListTransactions():void {
 
-        this.outlayManagerService.loadCodeListTransactions()
+        this.outlayManagerApiService.loadCodeListTransactions()
             .subscribe(response => {
 
                 var transactionCodeArray: Array<TransactionCodeDTO> = response;
