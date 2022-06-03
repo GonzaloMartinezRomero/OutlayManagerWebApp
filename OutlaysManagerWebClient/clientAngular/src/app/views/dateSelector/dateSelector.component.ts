@@ -1,9 +1,9 @@
-﻿import { AfterViewInit, Component, EventEmitter, Output } from "@angular/core";
-import { AppComponent } from "../../app.component";
+﻿import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
+import { NotificationEvent } from "../notification/notification.component";
 
 @Component(
     {
@@ -14,6 +14,7 @@ import { ExceptionUtils } from "../../utils/exceptionUtils";
 
 export class DateSelector implements AfterViewInit {
 
+    @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
     @Output() updateDateCalendarEmitter: EventEmitter<DateCalendar> = new EventEmitter<DateCalendar>();
 
     public monthsNamesMap: Map<string, number> = new Map<string, number>(
@@ -36,9 +37,7 @@ export class DateSelector implements AfterViewInit {
     public yearView: string = "";
     public monthView: string = "";
 
-    constructor(private outlayManagerAPI: OutlayManagerAPI, private mainApp: AppComponent) {
-       
-    }
+    constructor(private outlayManagerAPI: OutlayManagerAPI) { }
 
     ngAfterViewInit(): void {
 
@@ -49,7 +48,7 @@ export class DateSelector implements AfterViewInit {
                 this.updateCalendar();
 
             }, error => {
-                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+                this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
     }
 
@@ -77,7 +76,7 @@ export class DateSelector implements AfterViewInit {
             messageView.titleError = exception.toString();
             messageView.verbose = VerboseType.Error;
 
-            this.mainApp.openModalMessage(messageView);
+            this.notificationComponent?.openModalMessage(messageView);
         }
     }
 

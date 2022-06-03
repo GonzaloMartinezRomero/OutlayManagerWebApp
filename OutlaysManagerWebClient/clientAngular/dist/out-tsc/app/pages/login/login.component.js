@@ -1,12 +1,11 @@
 import { __decorate } from "tslib";
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { TokenStorage } from "../../utils/tokenStorage";
 let Login = class Login {
-    constructor(outlayManagerAPI, mainApp, router) {
+    constructor(outlayManagerAPI, router) {
         this.outlayManagerAPI = outlayManagerAPI;
-        this.mainApp = mainApp;
         this.router = router;
         this.userLogin = "";
         this.userPassword = "";
@@ -24,8 +23,9 @@ let Login = class Login {
     login() {
         this.outlayManagerAPI.requestJWTTokenAuthorization(this.userLogin, this.userPassword)
             .subscribe(response => {
+            var _a, _b;
             if (response.credentialToken === undefined || response.credentialToken === "") {
-                this.mainApp.openModalMessage(this.buildMsgErrorLogin());
+                (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(this.buildMsgErrorLogin());
             }
             else {
                 try {
@@ -33,11 +33,12 @@ let Login = class Login {
                     this.router.navigateByUrl('Dashboard');
                 }
                 catch (exception) {
-                    this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(exception));
+                    (_b = this.notificationComponent) === null || _b === void 0 ? void 0 : _b.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(exception));
                 }
             }
         }, error => {
-            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
     buildMsgErrorLogin() {
@@ -50,6 +51,9 @@ let Login = class Login {
         return msg;
     }
 };
+__decorate([
+    ViewChild("notificationComponent")
+], Login.prototype, "notificationComponent", void 0);
 Login = __decorate([
     Component({
         selector: "login",

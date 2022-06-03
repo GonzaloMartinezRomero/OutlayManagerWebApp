@@ -2,38 +2,25 @@
     <div class="row">
         <div class="col-1">
             <h3 class="text-center">Menu</h3>
-            <hr>           
-            <hr/>
+            <hr>
+            <hr />
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item text-center">
                     <a routerLink="../Analycer" class="nav-link active">
                         Analycer
                     </a>
-                </li>            
-            </ul>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">                
-                <li class="nav-item text-center">
-                    <button class="nav-link active" (click)="downloadRemoteTransactions()">Sync Transactions</button>                
                 </li>
             </ul>
-        </div>      
-        <div class="col-11">           
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item text-center">
+                    <button class="nav-link active" (click)="downloadRemoteTransactions()">Sync Transactions</button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-11">
             <calendar #calendar></calendar>
         </div>
+    </div> 
 </div>
-</div>
-
-<ng-template #loadingComponent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Loading Transactions</h4>
-    </div>
-    <div class="modal-body">
-        <h3>Updating....</h3>
-        <h3>Updated {{updatedTransactions}}</h3>
-        <loading></loading>
-    </div>
-    <!--<div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="confirm()">Delete</button>       
-    </div>-->
-</ng-template>
+<notification-event #notificationComponent></notification-event>

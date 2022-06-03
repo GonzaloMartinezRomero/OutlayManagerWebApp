@@ -5,9 +5,8 @@ import { BaseChartDirective } from "ng2-charts";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionTypes } from "../../utils/TransactionTypes";
 let SavingChart = class SavingChart {
-    constructor(outlayAPIService, mainApp, calendarService, angularZone) {
+    constructor(outlayAPIService, calendarService, angularZone) {
         this.outlayAPIService = outlayAPIService;
-        this.mainApp = mainApp;
         this.calendarService = calendarService;
         this.angularZone = angularZone;
         this.monthNames = ["January", "February", "March", "April", "May", "June",
@@ -47,7 +46,8 @@ let SavingChart = class SavingChart {
             .subscribe(response => {
             this.yearsAvailables = response;
         }, error => {
-            this.mainApp.openModalMessage(this.buildMessageError(error, "Load Years Availables"));
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(this.buildMessageError(error, "Load Years Availables"));
         });
     }
     updateTransactionsResume(response) {
@@ -139,6 +139,9 @@ __decorate([
 __decorate([
     ViewChild("incomings")
 ], SavingChart.prototype, "resumeMonthIncomingComponent", void 0);
+__decorate([
+    ViewChild("notificationComponent")
+], SavingChart.prototype, "notificationComponent", void 0);
 SavingChart = __decorate([
     Component({
         selector: "savingChart",

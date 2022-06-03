@@ -146,6 +146,7 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         }
         return tokenIsValid;
     }
+    //Returns transactions saved asynchronously
     downloadRemoteTransaction() {
         var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
         var header = this.getHeader();

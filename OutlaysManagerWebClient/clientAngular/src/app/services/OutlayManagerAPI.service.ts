@@ -216,14 +216,12 @@ export class OutlayManagerAPI {
         return tokenIsValid;
     }
 
+    //Returns transactions saved asynchronously
     public downloadRemoteTransaction(): Observable<TransactionDTO[]> {
 
         var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
 
         var header: HttpHeaders = this.getHeader();
-
-        console.log(endPoint);
-        console.log(header);
 
         return this.httpClient.get<TransactionDTO[]>(endPoint, { headers: header })
             .pipe(catchError((ex: any) => {

@@ -21,9 +21,6 @@
     <TypeScriptCompile Update="clientAngular\src\app\views\calendar\calendar.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Update="clientAngular\src\app\views\loading\loading.component.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
   </ItemGroup>
 
   <ItemGroup>

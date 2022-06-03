@@ -7,11 +7,10 @@ import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { TransactionTypes } from "../../utils/TransactionTypes";
 import { ResumeOutlays } from "../resumeOutlays/resumeOutlays.component";
 let Calendar = class Calendar {
-    constructor(calendarService, outlayManagerService, modalABM, mainApp) {
+    constructor(calendarService, outlayManagerApiService, modalABM) {
         this.calendarService = calendarService;
-        this.outlayManagerService = outlayManagerService;
+        this.outlayManagerApiService = outlayManagerApiService;
         this.modalABM = modalABM;
-        this.mainApp = mainApp;
         this.deleteConfirmationModalRef = undefined;
         this.setupModalTransactionTypeRef = undefined;
         this.AdjustType = TransactionTypes.ADJUST;
@@ -25,35 +24,42 @@ let Calendar = class Calendar {
         this.transactionTypeMap = new Map();
         this.transactionCodesMap = new Map();
         this.newCodeTransaction = "";
-        this.calendarService.calendarContainerSubject.subscribe(response => {
+        this.calendarService.calendarContainerSubject
+            .subscribe(response => {
             this.loadCalendar(response);
         });
     }
     ngOnInit() {
-        this.outlayManagerService.loadTransactionTypeOutlays()
+        this.outlayManagerApiService.loadTransactionTypeOutlays()
             .subscribe(response => {
             var arrayTypeTransaction = response;
             this.transactionTypeMap = new Map();
             arrayTypeTransaction.forEach(x => this.transactionTypeMap.set(x.type, x));
-        }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
+        }, error => { var _a; (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
         this.loadCodeListTransactions();
     }
     loadCalendar(transactionCalendarContainer) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         if (transactionCalendarContainer.isError) {
-            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(transactionCalendarContainer.exceptionAPI));
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(transactionCalendarContainer.exceptionAPI));
         }
         else {
             //Update main class calendar
             this.transactionsCalendar = transactionCalendarContainer;
             //Update childs values
-            (_a = this.resumeMonthExpensesComponent) === null || _a === void 0 ? void 0 : _a.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, true);
-            (_b = this.resumeMonthIncomingsComponent) === null || _b === void 0 ? void 0 : _b.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, false);
-            (_c = this.resumeOutlaysComponent) === null || _c === void 0 ? void 0 : _c.loadMonthResume(transactionCalendarContainer);
+            (_b = this.resumeMonthExpensesComponent) === null || _b === void 0 ? void 0 : _b.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, true);
+            (_c = this.resumeMonthIncomingsComponent) === null || _c === void 0 ? void 0 : _c.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, false);
+            (_d = this.resumeOutlaysComponent) === null || _d === void 0 ? void 0 : _d.loadMonthResume(transactionCalendarContainer);
         }
     }
     updateCalendarDate(dateCalendar) {
-        this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
+        //If not specified nothing reload calendar with the latest date
+        if (dateCalendar == null) {
+            this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
+        }
+        else {
+            this.calendarService.loadTransactionsCalendar(dateCalendar.Year, dateCalendar.Month);
+        }
     }
     openTransactionConfigModal(modalTemplate, transaction, day) {
         if (transaction === undefined) {
@@ -82,13 +88,15 @@ let Calendar = class Calendar {
             throw new Error("Internal Error: Transaction type ID not defined!");
         this.transactionView.codeTransactionID = transactionCodeID;
         this.transactionView.typeTransactionID = transactionTypeID;
-        this.outlayManagerService.saveTransaction(this.transactionView)
+        this.outlayManagerApiService.saveTransaction(this.transactionView)
             .subscribe(response => {
+            var _a;
             this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
             this.closeTransactionConfigurationModal();
-            this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(this.buildSucessAPIResponse(response, operationType));
         }, error => {
-            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
     closeTransactionConfigurationModal() {
@@ -99,12 +107,13 @@ let Calendar = class Calendar {
         if (deleteTransaction) {
             const operationType = "Delete Transaction";
             var transactionID = this.transactionView.id;
-            this.outlayManagerService.deleteTransaction(transactionID)
+            this.outlayManagerApiService.deleteTransaction(transactionID)
                 .subscribe(response => {
+                var _a;
                 this.calendarService.loadTransactionsCalendar(this.transactionsCalendar.year, this.transactionsCalendar.month);
                 this.closeTransactionConfigurationModal();
-                this.mainApp.openModalMessage(this.buildSucessAPIResponse(response, operationType));
-            }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
+                (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(this.buildSucessAPIResponse(response, operationType));
+            }, error => { var _a; (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
         }
         else {
             (_a = this.deleteConfirmationModalRef) === null || _a === void 0 ? void 0 : _a.close();
@@ -124,34 +133,37 @@ let Calendar = class Calendar {
     }
     deleteTransactionCode(codeID) {
         if (codeID > 0)
-            this.outlayManagerService.deleteTransactionCode(codeID)
+            this.outlayManagerApiService.deleteTransactionCode(codeID)
                 .subscribe(response => {
                 this.loadCodeListTransactions();
             }, error => {
-                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+                var _a;
+                (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
     }
     addTransactionCode(codeTransaction) {
+        var _a;
         if ((codeTransaction === null || codeTransaction === void 0 ? void 0 : codeTransaction.length) > 0) {
-            this.outlayManagerService.addTransactionCode(codeTransaction)
+            this.outlayManagerApiService.addTransactionCode(codeTransaction)
                 .subscribe(response => {
                 this.loadCodeListTransactions();
                 this.newCodeTransaction = "";
             }, error => {
-                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+                var _a;
+                (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
         }
         else {
-            this.mainApp.openModalMessage(this.buildMessageError("Transaction code is empty!", "Add transaction code"));
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(this.buildMessageError("Transaction code is empty!", "Add transaction code"));
         }
     }
     loadCodeListTransactions() {
-        this.outlayManagerService.loadCodeListTransactions()
+        this.outlayManagerApiService.loadCodeListTransactions()
             .subscribe(response => {
             var transactionCodeArray = response;
             this.transactionCodesMap = new Map();
             transactionCodeArray.forEach(x => this.transactionCodesMap.set(x.code, x));
-        }, error => { this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
+        }, error => { var _a; (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error)); });
     }
     copyTransaction(transaction) {
         var transactionCopy = new TransactionDTO();
@@ -182,6 +194,9 @@ let Calendar = class Calendar {
         return messageView;
     }
 };
+__decorate([
+    ViewChild("notificationComponent")
+], Calendar.prototype, "notificationComponent", void 0);
 __decorate([
     ViewChild("resumeMonthTransactionExpenses")
 ], Calendar.prototype, "resumeMonthExpensesComponent", void 0);
