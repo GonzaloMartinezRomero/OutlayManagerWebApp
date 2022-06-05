@@ -10,13 +10,32 @@ let Dashboard = class Dashboard {
         (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.showLoading("Sync transactions...");
         this.outlayManagerApiService.downloadRemoteTransaction()
             .subscribe(result => {
-            var _a, _b;
-            (_a = this.calendarComponent) === null || _a === void 0 ? void 0 : _a.updateCalendarDate(null);
+            var _a, _b, _c;
             var numberOfTransactions = result.length;
-            (_b = this.notificationComponent) === null || _b === void 0 ? void 0 : _b.finalizeLoading("Added " + numberOfTransactions + " transactions!");
+            if (numberOfTransactions == 0) {
+                (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.finalizeLoading("No transactions for sync");
+            }
+            else {
+                (_b = this.calendarComponent) === null || _b === void 0 ? void 0 : _b.updateCalendarDate(null);
+                (_c = this.notificationComponent) === null || _c === void 0 ? void 0 : _c.finalizeLoading(`Added ${numberOfTransactions} transactions`);
+            }
         }, error => {
             var _a, _b;
-            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.finalizeLoading("Error during transaction sync");
+            console.log(error);
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.closeLoadingModal();
+            (_b = this.notificationComponent) === null || _b === void 0 ? void 0 : _b.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+        });
+    }
+    backupTransactions() {
+        var _a;
+        (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.showLoading("Backup transactions...");
+        this.outlayManagerApiService.backupTransactions()
+            .subscribe(result => {
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.finalizeLoading("Backup successfully!");
+        }, error => {
+            var _a, _b;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.closeLoadingModal();
             (_b = this.notificationComponent) === null || _b === void 0 ? void 0 : _b.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }

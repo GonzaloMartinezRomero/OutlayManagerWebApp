@@ -25,15 +25,37 @@ export class Dashboard{
         this.outlayManagerApiService.downloadRemoteTransaction()                                    
                                     .subscribe(result =>
                                     {
-                                        this.calendarComponent?.updateCalendarDate(null);
-
                                         var numberOfTransactions: number = result.length;
-                                        this.notificationComponent?.finalizeLoading("Added " + numberOfTransactions+ " transactions!");
+
+                                        if (numberOfTransactions == 0) {
+
+                                            this.notificationComponent?.finalizeLoading("No transactions for sync");
+
+                                        } else {
+                                            
+                                            this.calendarComponent?.updateCalendarDate(null);
+                                            this.notificationComponent?.finalizeLoading(`Added ${numberOfTransactions} transactions`);
+                                        }
 
                                     }, error =>
                                     {
-                                        this.notificationComponent?.finalizeLoading("Error during transaction sync");
+                                        console.log(error);
+                                        this.notificationComponent?.closeLoadingModal();
                                         this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
                                     });
+    }
+
+    public backupTransactions(): void {
+
+        this.notificationComponent?.showLoading("Backup transactions...");
+
+        this.outlayManagerApiService.backupTransactions()
+            .subscribe(result => {
+                    this.notificationComponent?.finalizeLoading("Backup successfully!");
+            },error => {
+              
+                this.notificationComponent?.closeLoadingModal();
+                this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+            });
     }
 }

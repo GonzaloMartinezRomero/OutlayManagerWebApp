@@ -156,16 +156,28 @@ let OutlayManagerAPI = class OutlayManagerAPI {
             throw exception;
         }));
     }
+    backupTransactions() {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.BackupTransaction;
+        var header = this.getHeader();
+        return this.httpClient.get(endPoint, { headers: header })
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Backup transactions");
+            throw exception;
+        }));
+    }
     buildExceptionMessage(exceptionAPI, endPoint) {
+        console.log("Exception api");
+        console.log(exceptionAPI);
+        var exceptionErrorAPI = exceptionAPI.error;
         var exception = new ExceptionAPI();
         exception.EndPoint = endPoint;
-        exception.StatusCode = exceptionAPI.status;
-        switch (exceptionAPI.status) {
+        exception.StatusCode = exceptionErrorAPI.status;
+        switch (exceptionErrorAPI.status) {
             case 0:
                 exception.Message = "API service not available calling to " + environment.hostOutlayManagerAPI;
                 break;
             case 500:
-                exception.Message = exceptionAPI.detail;
+                exception.Message = exceptionErrorAPI.detail;
                 break;
             case 404:
                 exception.Message = "Not Found";
