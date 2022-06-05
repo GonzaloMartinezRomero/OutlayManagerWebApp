@@ -1,7 +1,8 @@
-﻿import { Component, ElementRef, ViewChild } from "@angular/core";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+﻿import { Component, ViewChild } from "@angular/core";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
+import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { Calendar } from "../../views/calendar/calendar.component";
+import { NotificationEvent } from "../../views/notification/notification.component";
 
 @Component(
     {
@@ -11,33 +12,28 @@ import { Calendar } from "../../views/calendar/calendar.component";
 )
 
 export class Dashboard{
+        
+    @ViewChild("calendar") private calendarComponent: Calendar | undefined;
+    @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
 
-    @ViewChild('loadingComponent') mymodal: ElementRef | undefined;
-    public updatedTransactions: string = "Ninguna";
-    public loadingModal?: NgbModalRef | undefined;
-    @ViewChild("calendar") calendarComponent: Calendar | undefined;
+    constructor(private outlayManagerApiService: OutlayManagerAPI) { }
 
-    constructor(private outlayManagerApiService: OutlayManagerAPI, private modalABM: NgbModal) {
+    public downloadRemoteTransactions(): void {
+                
+        this.notificationComponent?.showLoading("Sync transactions...");
 
-    }
+        this.outlayManagerApiService.downloadRemoteTransaction()                                    
+                                    .subscribe(result =>
+                                    {
+                                        this.calendarComponent?.updateCalendarDate(null);
 
-    public downloadRemoteTransactions():void {
+                                        var numberOfTransactions: number = result.length;
+                                        this.notificationComponent?.finalizeLoading("Added " + numberOfTransactions+ " transactions!");
 
-        console.log("Dandolo a la vaina");
-
-        this.loadingModal = this.modalABM.open(this.mymodal);
-
-        console.log(this.loadingModal);
-
-        this.outlayManagerApiService.downloadRemoteTransaction().subscribe(result =>
-        {
-            this.calendarComponent?.updateCalendarDate(null);
-
-            this.updatedTransactions = "pues ya esta";            
-        });
-    }
-
-    public confirm(): void{
-        this.loadingModal?.close();
+                                    }, error =>
+                                    {
+                                        this.notificationComponent?.finalizeLoading("Error during transaction sync");
+                                        this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+                                    });
     }
 }

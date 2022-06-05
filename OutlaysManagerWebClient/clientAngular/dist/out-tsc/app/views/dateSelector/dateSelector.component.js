@@ -1,12 +1,11 @@
 import { __decorate } from "tslib";
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
 let DateSelector = class DateSelector {
-    constructor(outlayManagerAPI, mainApp) {
+    constructor(outlayManagerAPI) {
         this.outlayManagerAPI = outlayManagerAPI;
-        this.mainApp = mainApp;
         this.updateDateCalendarEmitter = new EventEmitter();
         this.monthsNamesMap = new Map([
             ["January", 1],
@@ -33,10 +32,12 @@ let DateSelector = class DateSelector {
             this.loadCurrentDateToView();
             this.updateCalendar();
         }, error => {
-            this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
     updateCalendar() {
+        var _a;
         try {
             var yearNormalized = parseInt(this.yearView);
             var monthNormalized = this.monthsNamesMap.get(this.monthView);
@@ -53,7 +54,7 @@ let DateSelector = class DateSelector {
             messageView.action = "Calendar Builder";
             messageView.titleError = exception.toString();
             messageView.verbose = VerboseType.Error;
-            this.mainApp.openModalMessage(messageView);
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(messageView);
         }
     }
     loadCurrentDateToView() {
@@ -71,6 +72,9 @@ let DateSelector = class DateSelector {
         });
     }
 };
+__decorate([
+    ViewChild("notificationComponent")
+], DateSelector.prototype, "notificationComponent", void 0);
 __decorate([
     Output()
 ], DateSelector.prototype, "updateDateCalendarEmitter", void 0);

@@ -14,7 +14,7 @@ import { OutlayManagerAPI } from './services/outlayManagerAPI.service';
 import { AmountResumes } from "./views/amountResumes/amountResumes.component";
 import { Calendar } from './views/calendar/calendar.component';
 import { DateSelector } from "./views/dateSelector/dateSelector.component";
-import { Loading } from "./views/loading/loading.component";
+import { NotificationEvent } from "./views/notification/notification.component";
 import { ResumeMonthTransaction } from "./views/resumeMonthTransaction/resumeMonthTransaction.component";
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 import { SavingChart } from "./views/savingChart/savingChart.component";
@@ -31,7 +31,7 @@ import { SavingChart } from "./views/savingChart/savingChart.component";
         SavingChart,
         Login,
         AmountResumes,
-        Loading
+        NotificationEvent
   ],
   imports: [
       BrowserModule,
@@ -39,15 +39,12 @@ import { SavingChart } from "./views/savingChart/savingChart.component";
       HttpClientModule,
       NgbModule,
       routerConfig,
-      NgChartsModule
+      NgChartsModule,     
   ],
   providers: [
       CalendarService,
-      OutlayManagerAPI,
-      AppComponent     
+      OutlayManagerAPI,            
   ],
-  bootstrap: [AppComponent]
-    
-
+    bootstrap: [AppComponent],
 })
 export class AppModule { }

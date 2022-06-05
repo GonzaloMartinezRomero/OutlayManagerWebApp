@@ -2,13 +2,13 @@
 import { ChartConfiguration, ChartData, ChartType } from "chart.js";
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from "ng2-charts";
-import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { CalendarService } from "../../services/calendar.service";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { TransactionTypes } from "../../utils/TransactionTypes";
+import { NotificationEvent } from "../notification/notification.component";
 import { ResumeMonthTransaction } from "../resumeMonthTransaction/resumeMonthTransaction.component";
 
 @Component(
@@ -23,14 +23,15 @@ export class SavingChart implements OnInit {
     private readonly monthNames: string[] = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
 
-    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-    @ViewChild("expenses") resumeMonthExpensesComponent: ResumeMonthTransaction | undefined;
-    @ViewChild("incomings") resumeMonthIncomingComponent: ResumeMonthTransaction | undefined;
+    @ViewChild(BaseChartDirective) private chart: BaseChartDirective | undefined;
+    @ViewChild("expenses") private resumeMonthExpensesComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("incomings") private resumeMonthIncomingComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
 
     public yearSelected: number = 0;
     public yearsAvailables: Array<number> = new Array<number>();
 
-    constructor(private outlayAPIService: OutlayManagerAPI, private mainApp: AppComponent, private calendarService: CalendarService, private angularZone: NgZone) {
+    constructor(private outlayAPIService: OutlayManagerAPI, private calendarService: CalendarService, private angularZone: NgZone) {
 
         this.calendarService.calendarContainerSubject.subscribe(response => { this.updateResumeMonthTransactions(response);});
     }
@@ -43,7 +44,7 @@ export class SavingChart implements OnInit {
 
             }, error => {
 
-                this.mainApp.openModalMessage(this.buildMessageError(error, "Load Years Availables"));
+                this.notificationComponent?.openModalMessage(this.buildMessageError(error, "Load Years Availables"));
             });
     }
 

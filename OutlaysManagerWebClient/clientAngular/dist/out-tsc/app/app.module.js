@@ -4,20 +4,21 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgChartsModule } from 'ng2-charts';
 import { AppComponent } from './app.component';
 import { Analycer } from "./pages/analycer/analycer.component";
 import { Dashboard } from "./pages/dashboard/dashboard.component";
+import { Login } from "./pages/login/login.component";
 import routerConfig from './router/router';
 import { CalendarService } from './services/calendar.service';
 import { OutlayManagerAPI } from './services/outlayManagerAPI.service';
+import { AmountResumes } from "./views/amountResumes/amountResumes.component";
 import { Calendar } from './views/calendar/calendar.component';
 import { DateSelector } from "./views/dateSelector/dateSelector.component";
-import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
-import { NgChartsModule } from 'ng2-charts';
-import { SavingChart } from "./views/savingChart/savingChart.component";
-import { Login } from "./pages/login/login.component";
-import { AmountResumes } from "./views/amountResumes/amountResumes.component";
+import { NotificationEvent } from "./views/notification/notification.component";
 import { ResumeMonthTransaction } from "./views/resumeMonthTransaction/resumeMonthTransaction.component";
+import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
+import { SavingChart } from "./views/savingChart/savingChart.component";
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -32,7 +33,8 @@ AppModule = __decorate([
             Analycer,
             SavingChart,
             Login,
-            AmountResumes
+            AmountResumes,
+            NotificationEvent
         ],
         imports: [
             BrowserModule,
@@ -40,14 +42,13 @@ AppModule = __decorate([
             HttpClientModule,
             NgbModule,
             routerConfig,
-            NgChartsModule
+            NgChartsModule,
         ],
         providers: [
             CalendarService,
             OutlayManagerAPI,
-            AppComponent
         ],
-        bootstrap: [AppComponent]
+        bootstrap: [AppComponent],
     })
 ], AppModule);
 export { AppModule };

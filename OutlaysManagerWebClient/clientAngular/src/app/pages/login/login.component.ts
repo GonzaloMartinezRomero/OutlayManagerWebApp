@@ -1,10 +1,10 @@
-﻿import { Component } from "@angular/core";
+﻿import { Component, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppComponent } from "../../app.component";
 import { MessageView, VerboseType } from "../../model/MessageView";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { TokenStorage } from "../../utils/tokenStorage";
+import { NotificationEvent } from "../../views/notification/notification.component";
 
 @Component(
     {
@@ -15,10 +15,12 @@ import { TokenStorage } from "../../utils/tokenStorage";
 
 export class Login{
 
+    @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
+
     public userLogin: string = "";
     public userPassword: string = "";
 
-    constructor(private outlayManagerAPI: OutlayManagerAPI, private mainApp: AppComponent, private router: Router) {
+    constructor(private outlayManagerAPI: OutlayManagerAPI, private router: Router) {
 
     }
 
@@ -44,7 +46,7 @@ export class Login{
             {
                 if (response.credentialToken === undefined || response.credentialToken === "") {
 
-                    this.mainApp.openModalMessage(this.buildMsgErrorLogin());
+                    this.notificationComponent?.openModalMessage(this.buildMsgErrorLogin());
 
                 } else {
 
@@ -55,13 +57,13 @@ export class Login{
 
                     } catch (exception){
 
-                        this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(exception));
+                        this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(exception));
                     }         
                 }
 
             }, error => {
                                
-                this.mainApp.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+                this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
             });
     }
 
