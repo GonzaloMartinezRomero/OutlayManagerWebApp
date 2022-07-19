@@ -8,12 +8,16 @@
                     <li class="nav-item text-center">
                         <a routerLink="../Analycer" class="nav-link active btn-block btn btn-warning">Analycer</a>
                         <hr />
-                    </li>                    
+                    </li>
                     <li class="nav-item text-center">
-                        <button class="nav-link active btn-block btn btn-secondary mb-4" (click)="downloadRemoteTransactions()">Sync Up</button>
+                        <button class="nav-link active btn-block btn btn-secondary mb-4" (click)="synchronizeRemoteTransactions()">Sync Up</button>
                     </li>
                     <li>
                         <button class="nav-link active btn-block btn btn-secondary" (click)="backupTransactions()">Backup</button>
+                        <hr />
+                    </li>
+                    <li>
+                        <button class="nav-link active btn-block btn btn-secondary" (click)="downloadBackup()">Download Backup</button>
                     </li>
                 </ul>
             </section>

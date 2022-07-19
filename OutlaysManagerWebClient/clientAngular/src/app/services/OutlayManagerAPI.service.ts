@@ -217,16 +217,16 @@ export class OutlayManagerAPI {
     }
 
     //Returns transactions saved asynchronously
-    public downloadRemoteTransaction(): Observable<TransactionDTO[]> {
+    public synchronizeRemoteTransaction(): Observable<TransactionDTO[]> {
 
-        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.SynchronizeExternalTransaction;
 
         var header: HttpHeaders = this.getHeader();
 
         return this.httpClient.get<TransactionDTO[]>(endPoint, { headers: header })
             .pipe(catchError((ex: any) => {
 
-                var exception = this.buildExceptionMessage(ex, "Download remote transactions");
+                var exception = this.buildExceptionMessage(ex, "Sync remote transactions");
                 throw exception;
             }));
     }
@@ -238,6 +238,20 @@ export class OutlayManagerAPI {
         var header: HttpHeaders = this.getHeader();
 
         return this.httpClient.get<any>(endPoint, { headers: header })
+            .pipe(catchError((ex: any) => {
+
+                var exception = this.buildExceptionMessage(ex, "Backup transactions");
+                throw exception;
+            }));
+    }
+
+    public downloadBackupFileTransactions(): Observable<Blob> {
+
+        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadBackupTransaction;
+
+        var header: HttpHeaders = this.getHeader();
+
+        return this.httpClient.get(endPoint, { headers: header, responseType:'blob' })
             .pipe(catchError((ex: any) => {
 
                 var exception = this.buildExceptionMessage(ex, "Backup transactions");
