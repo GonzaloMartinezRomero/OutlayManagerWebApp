@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  outlaysmanagerwebclient:
+    image: ${DOCKER_REGISTRY-}outlaysmanagerwebclient
+    build:
+      context: .
+      dockerfile: OutlaysManagerWebClient/Dockerfile
+    ports:
+     - 10896:10896
+    environment: 
+     - ASPNETCORE_ENVIRONMENT=Production 

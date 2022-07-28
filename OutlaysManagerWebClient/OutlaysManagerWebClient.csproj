@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AngularClientRoot>clientAngular</AngularClientRoot>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +29,4 @@
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
-
-  <Target Name="PublishAngularBuilder" BeforeTargets="BeforePublish">
-    <Exec WorkingDirectory="$(AngularClientRoot)" Command="ng build --configuration production" />
-  </Target>
-  
 </Project>
