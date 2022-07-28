@@ -10,7 +10,8 @@ export const environment = {
             TransactionYearsAvailables: "/TransactionInfo/YearsAvailables",
             AmountResumes: "/TransactionInfo/AmountResumes"
         },
-        DownloadExternalTransaction: "/ExternalTransaction/Download"
+        DownloadExternalTransaction: "/ExternalOperation/Download",
+        BackupTransaction: "/ExternalOperation/Backup",
     }
 };
 //# sourceMappingURL=environment.prod.js.map
