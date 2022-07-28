@@ -262,5 +262,5 @@ __pycache__/
 *.pyc
 
 #Angular 
-OutlaysManagerWebClient\clientAngular\dist
+OutlaysManagerWebClient/clientAngular/dist/*
 package-lock.json
