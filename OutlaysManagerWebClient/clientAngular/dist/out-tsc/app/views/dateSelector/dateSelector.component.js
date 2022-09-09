@@ -39,14 +39,7 @@ let DateSelector = class DateSelector {
     updateCalendar() {
         var _a;
         try {
-            var yearNormalized = parseInt(this.yearView);
-            var monthNormalized = this.monthsNamesMap.get(this.monthView);
-            if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
-                throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
-            }
-            var calendarDate = new DateCalendar();
-            calendarDate.Year = yearNormalized;
-            calendarDate.Month = monthNormalized;
+            var calendarDate = this.getCalendarDate();
             this.updateDateCalendarEmitter.emit(calendarDate);
         }
         catch (exception) {
@@ -56,6 +49,39 @@ let DateSelector = class DateSelector {
             messageView.verbose = VerboseType.Error;
             (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(messageView);
         }
+    }
+    nextMonth() {
+        var calendarDate = this.getCalendarDate();
+        if (calendarDate.Month === 12) {
+            calendarDate.Month = 1;
+            calendarDate.Year += 1;
+        }
+        else {
+            calendarDate.Month += 1;
+        }
+        this.updateDateCalendarEmitter.emit(calendarDate);
+    }
+    backMonth() {
+        var calendarDate = this.getCalendarDate();
+        if (calendarDate.Month === 1) {
+            calendarDate.Month = 12;
+            calendarDate.Year -= 1;
+        }
+        else {
+            calendarDate.Month -= 1;
+        }
+        this.updateDateCalendarEmitter.emit(calendarDate);
+    }
+    getCalendarDate() {
+        var yearNormalized = parseInt(this.yearView);
+        var monthNormalized = this.monthsNamesMap.get(this.monthView);
+        if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
+            throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
+        }
+        var calendarDate = new DateCalendar();
+        calendarDate.Year = yearNormalized;
+        calendarDate.Month = monthNormalized;
+        return calendarDate;
     }
     loadCurrentDateToView() {
         var today = new Date(Date.now());

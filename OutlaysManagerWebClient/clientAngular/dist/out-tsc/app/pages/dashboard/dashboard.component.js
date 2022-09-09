@@ -5,10 +5,10 @@ let Dashboard = class Dashboard {
     constructor(outlayManagerApiService) {
         this.outlayManagerApiService = outlayManagerApiService;
     }
-    downloadRemoteTransactions() {
+    synchronizeRemoteTransactions() {
         var _a;
         (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.showLoading("Sync transactions...");
-        this.outlayManagerApiService.downloadRemoteTransaction()
+        this.outlayManagerApiService.synchronizeRemoteTransaction()
             .subscribe(result => {
             var _a, _b, _c;
             var numberOfTransactions = result.length;
@@ -37,6 +37,21 @@ let Dashboard = class Dashboard {
             var _a, _b;
             (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.closeLoadingModal();
             (_b = this.notificationComponent) === null || _b === void 0 ? void 0 : _b.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+        });
+    }
+    downloadBackup() {
+        this.outlayManagerApiService.downloadBackupFileTransactions()
+            .subscribe(result => {
+            let downloadLink = document.createElement('a');
+            downloadLink.download = "TransactionBackup";
+            let binaryData = [];
+            binaryData.push(result);
+            let blob = new Blob(binaryData, { type: "application/json" });
+            downloadLink.href = window.URL.createObjectURL(blob);
+            downloadLink.click();
+        }, error => {
+            var _a;
+            (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
         });
     }
 };

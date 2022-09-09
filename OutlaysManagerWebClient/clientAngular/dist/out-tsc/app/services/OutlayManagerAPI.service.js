@@ -147,12 +147,12 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         return tokenIsValid;
     }
     //Returns transactions saved asynchronously
-    downloadRemoteTransaction() {
-        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadExternalTransaction;
+    synchronizeRemoteTransaction() {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.SynchronizeExternalTransaction;
         var header = this.getHeader();
         return this.httpClient.get(endPoint, { headers: header })
             .pipe(catchError((ex) => {
-            var exception = this.buildExceptionMessage(ex, "Download remote transactions");
+            var exception = this.buildExceptionMessage(ex, "Sync remote transactions");
             throw exception;
         }));
     }
@@ -160,6 +160,15 @@ let OutlayManagerAPI = class OutlayManagerAPI {
         var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.BackupTransaction;
         var header = this.getHeader();
         return this.httpClient.get(endPoint, { headers: header })
+            .pipe(catchError((ex) => {
+            var exception = this.buildExceptionMessage(ex, "Backup transactions");
+            throw exception;
+        }));
+    }
+    downloadBackupFileTransactions() {
+        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.DownloadBackupTransaction;
+        var header = this.getHeader();
+        return this.httpClient.get(endPoint, { headers: header, responseType: 'blob' })
             .pipe(catchError((ex) => {
             var exception = this.buildExceptionMessage(ex, "Backup transactions");
             throw exception;

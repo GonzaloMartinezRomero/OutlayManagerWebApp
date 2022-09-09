@@ -1,4 +1,4 @@
-﻿<div class="border">
+﻿<div>
     <form class="form-inline">
         <div class="form-group">
             <label class="ml-2">Select Year</label>     
@@ -13,6 +13,14 @@
             </select>
         </div>
         <button id="buttonLoadCalendar" type="button" class="btn btn-primary ml-2" (click)="updateCalendar()">Load Calendar</button>        
+        <div class="form-group ml-4">
+            <button class="btn btn-outline-success" type="button" (click)="backMonth()">
+                <span aria-hidden="true"><</span>
+            </button>
+            <button class="btn btn-outline-success ml-1" type="button" (click)="nextMonth()">
+                <span aria-hidden="true">></span>
+            </button>
+        </div>       
     </form>    
 </div>
 <notification-event #notificationComponent></notification-event>

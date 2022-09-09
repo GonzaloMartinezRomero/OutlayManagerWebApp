@@ -13,6 +13,7 @@ import { NotificationEvent } from "../notification/notification.component";
 )
 
 export class DateSelector implements AfterViewInit {
+       
 
     @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
     @Output() updateDateCalendarEmitter: EventEmitter<DateCalendar> = new EventEmitter<DateCalendar>();
@@ -31,6 +32,22 @@ export class DateSelector implements AfterViewInit {
             ["October", 10],
             ["November", 11],
             ["December", 12],
+        ]);
+
+    public monthsNamesReverseMap: Map<number, string> = new Map<number, string>(
+        [
+            [1, "January"],
+            [2,"Febrary"],
+            [3,"March"],
+            [4,"April"],
+            [5,"May"],
+            [6,"Juny"],
+            [7,"July"],
+            [8,"Agost"],
+            [9,"September"],
+            [10,"October"],
+            [11,"November"],
+            [12,"December"],
         ]);
 
     public yearsAvailables: Array<number> = new Array<number>();
@@ -56,16 +73,7 @@ export class DateSelector implements AfterViewInit {
         
         try
         {
-            var yearNormalized: number = parseInt(this.yearView);
-            var monthNormalized: number = this.monthsNamesMap.get(this.monthView) as number;
-
-            if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
-                throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
-            }
-
-            var calendarDate: DateCalendar = new DateCalendar();
-            calendarDate.Year = yearNormalized;
-            calendarDate.Month = monthNormalized;
+            var calendarDate = this.getCalendarDate();
 
             this.updateDateCalendarEmitter.emit(calendarDate);
         }
@@ -78,6 +86,62 @@ export class DateSelector implements AfterViewInit {
 
             this.notificationComponent?.openModalMessage(messageView);
         }
+    }
+
+    public nextMonth():void {
+
+        var calendarDate = this.getCalendarDate();
+
+        if (calendarDate.Month === 12) {
+            calendarDate.Month = 1;
+            calendarDate.Year += 1;
+
+        } else {
+            calendarDate.Month += 1;
+        }
+
+        this.updateCalendarViewValues(calendarDate);
+    }
+
+    public backMonth(): void {
+
+        var calendarDate = this.getCalendarDate();
+
+        if (calendarDate.Month === 1) {
+            calendarDate.Month = 12;
+            calendarDate.Year -= 1;
+        } else {
+            calendarDate.Month -= 1;
+        }
+
+        this.updateCalendarViewValues(calendarDate);
+    }
+
+    private updateCalendarViewValues(calendarDate: DateCalendar):void {
+
+        if (this.yearsAvailables.find(value => value === calendarDate.Year)) {
+
+            this.yearView = calendarDate.Year.toString();
+            this.monthView = this.monthsNamesReverseMap.get(calendarDate.Month) ?? "";
+
+            this.updateDateCalendarEmitter.emit(calendarDate);
+        }
+    }
+
+    private getCalendarDate(): DateCalendar{
+
+        var yearNormalized: number = parseInt(this.yearView);
+        var monthNormalized: number = this.monthsNamesMap.get(this.monthView) as number;
+
+        if (!(yearNormalized > 1900 && (monthNormalized >= 1 && monthNormalized <= 12))) {
+            throw Error("Date selected is not valid! Year: " + yearNormalized + " Month: " + monthNormalized);
+        }
+
+        var calendarDate: DateCalendar = new DateCalendar();
+        calendarDate.Year = yearNormalized;
+        calendarDate.Month = monthNormalized;
+
+        return calendarDate;
     }
 
     private loadCurrentDateToView() {
