@@ -30,9 +30,10 @@ let Dashboard = class Dashboard {
         var _a;
         (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.showLoading("Backup transactions...");
         this.outlayManagerApiService.backupTransactions()
-            .subscribe(result => {
+            .subscribe(_ => {
             var _a;
             (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.finalizeLoading("Backup successfully!");
+            this.downloadBackup();
         }, error => {
             var _a, _b;
             (_a = this.notificationComponent) === null || _a === void 0 ? void 0 : _a.closeLoadingModal();

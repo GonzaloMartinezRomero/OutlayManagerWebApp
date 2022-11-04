@@ -1,5 +1,4 @@
 ﻿import { Component, ViewChild } from "@angular/core";
-import { error } from "jquery";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { ExceptionUtils } from "../../utils/exceptionUtils";
 import { Calendar } from "../../views/calendar/calendar.component";
@@ -51,16 +50,20 @@ export class Dashboard{
         this.notificationComponent?.showLoading("Backup transactions...");
 
         this.outlayManagerApiService.backupTransactions()
-            .subscribe(result => {
-                    this.notificationComponent?.finalizeLoading("Backup successfully!");
+            .subscribe(_ => {
+
+                this.notificationComponent?.finalizeLoading("Backup successfully!");
+                this.downloadBackup();
+
             },error => {
               
                 this.notificationComponent?.closeLoadingModal();
                 this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+
             });
     }
 
-    public downloadBackup(): void {
+    private downloadBackup(): void {
 
         this.outlayManagerApiService.downloadBackupFileTransactions()
                                     .subscribe(result => {

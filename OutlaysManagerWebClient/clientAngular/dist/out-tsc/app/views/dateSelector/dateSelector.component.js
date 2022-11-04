@@ -21,6 +21,20 @@ let DateSelector = class DateSelector {
             ["November", 11],
             ["December", 12],
         ]);
+        this.monthsNamesReverseMap = new Map([
+            [1, "January"],
+            [2, "Febrary"],
+            [3, "March"],
+            [4, "April"],
+            [5, "May"],
+            [6, "Juny"],
+            [7, "July"],
+            [8, "Agost"],
+            [9, "September"],
+            [10, "October"],
+            [11, "November"],
+            [12, "December"],
+        ]);
         this.yearsAvailables = new Array();
         this.yearView = "";
         this.monthView = "";
@@ -59,7 +73,7 @@ let DateSelector = class DateSelector {
         else {
             calendarDate.Month += 1;
         }
-        this.updateDateCalendarEmitter.emit(calendarDate);
+        this.updateCalendarViewValues(calendarDate);
     }
     backMonth() {
         var calendarDate = this.getCalendarDate();
@@ -70,7 +84,15 @@ let DateSelector = class DateSelector {
         else {
             calendarDate.Month -= 1;
         }
-        this.updateDateCalendarEmitter.emit(calendarDate);
+        this.updateCalendarViewValues(calendarDate);
+    }
+    updateCalendarViewValues(calendarDate) {
+        var _a;
+        if (this.yearsAvailables.find(value => value === calendarDate.Year)) {
+            this.yearView = calendarDate.Year.toString();
+            this.monthView = (_a = this.monthsNamesReverseMap.get(calendarDate.Month)) !== null && _a !== void 0 ? _a : "";
+            this.updateDateCalendarEmitter.emit(calendarDate);
+        }
     }
     getCalendarDate() {
         var yearNormalized = parseInt(this.yearView);
