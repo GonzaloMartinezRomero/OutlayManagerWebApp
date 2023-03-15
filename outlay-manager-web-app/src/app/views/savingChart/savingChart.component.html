@@ -1,0 +1,32 @@
+﻿<div class="container-fluid m-4">
+    <div class="row align-items-center" style="width: 300px;" >        
+        <div class="col">           
+            <label class="h5">Select Year:</label>     
+            <select class="form-control ml-2" [(ngModel)]="yearSelected" id="year" name="year" (change)="addYearOutlaysSavings()">                                
+                <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
+            </select>
+        </div>   
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-5">
+            <h3>Savings Resume</h3>            
+                <canvas baseChart width="1000" height="700"
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [plugins]="barChartPlugins"
+                        [type]="barChartType"
+                        (chartClick)="updateTransactionsResume($event)">
+                </canvas>           
+        </div>
+        <div class="col-4">
+           <h3>Expenses</h3>          
+            <resumeMonthTransaction #expenses></resumeMonthTransaction>            
+        </div>
+        <div class="col-3">
+            <h3>Incomings</h3>
+            <resumeMonthTransaction #incomings></resumeMonthTransaction>
+        </div>
+    </div>
+</div>
+<notification-event #notificationComponent></notification-event>

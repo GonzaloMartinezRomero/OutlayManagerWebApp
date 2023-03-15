@@ -1,0 +1,24 @@
+﻿<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-1 ml-1">            
+            <section>
+                <h2 class="text-center">Menu</h2>
+                <hr />
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item text-center">
+                        <a routerLink="../Analycer" class="btn btn-primary">Analycer</a>
+                        <hr />
+                    </li>
+                    <li class="nav-item text-center">
+                        <button class="btn btn-success" (click)="downloadPendingTransactions()">Pending Transactions</button>
+                    </li>                    
+                </ul>
+            </section>
+            <hr>
+        </div>
+        <div class="col-11">
+            <calendar #calendar></calendar>
+        </div>
+    </div> 
+</div>
+<notification-event #notificationComponent></notification-event>

@@ -1,0 +1,25 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col">
+            <label class="h5">Year</label>     
+            <select class="form-control ml-2" [(ngModel)]="yearView" id="year" name="year" (change)="updateCalendar()">                                
+                <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
+            </select>
+        </div>
+        <div class="col">
+            <label class="h5">Month</label>
+            <select class="form-control ml-2" [(ngModel)]="monthView"  id="month" name="month" (change)="updateCalendar()">
+                <option *ngFor="let monthAux of monthsNamesMap.keys()">{{monthAux}}</option>
+            </select>
+        </div>
+        <div class="col align-self-end">
+            <button class="btn btn-outline-success" type="button" (click)="backMonth()">
+                <span aria-hidden="true"><</span>
+            </button>       
+            <button class="btn btn-outline-success ms-2" type="button" (click)="nextMonth()">
+                <span aria-hidden="true">></span>
+            </button>
+        </div>
+    </div>
+</div>
+<notification-event #notificationComponent></notification-event>

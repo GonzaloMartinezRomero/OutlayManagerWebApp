@@ -259,7 +259,5 @@ paket-files/
 __pycache__/
 *.pyc
 
-#Angular 
-**/OutlaysManagerWebClient/clientAngular/dist/
-*package-lock.json
-**/wwwroot/clientAngular/
+dist/
+outlay-manager-web-app/.angular/cache/

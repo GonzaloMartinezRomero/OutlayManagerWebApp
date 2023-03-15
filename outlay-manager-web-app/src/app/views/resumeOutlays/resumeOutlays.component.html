@@ -1,0 +1,38 @@
+﻿<h2 class="mb-2">Resume Outlays</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Incoming</th>
+            <th scope="col">Expenses</th>
+            <th scope="col">Saving</th>            
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> <p>{{incomingView}}€</p></td>
+            <td> <p>{{expensesView}}€</p></td>
+            <td>
+                <div *ngIf="isGreaterThanZero(savingView)">
+                    <p>{{savingView}}€ <span><img src="/assets/{{IMG_ARROW_UP}}" /></span> </p> 
+                </div>
+
+                <div *ngIf="!isGreaterThanZero(savingView)">
+                    <p>{{savingView}}€ <span><img src="/assets/{{IMG_ARROW_DOWN}}" /></span> </p>  
+                </div>
+            </td>
+        </tr>        
+</table>
+
+<table class="table table-bordered">
+    <thead> 
+        <tr>
+            <th scope="col">Total Amount</th>
+        </tr>
+    
+    </thead>
+    <tbody>
+        <tr>            
+            <td> <p>{{totalAmountView}}€</p></td>
+        </tr>
+    </tbody>
+</table>
