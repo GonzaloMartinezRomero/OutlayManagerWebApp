@@ -8,7 +8,8 @@ export const environment = {
         TransactionsInfo: {
             TransactionTypes: "/TransactionInfo/TransactionTypes",
             TransactionYearsAvailables: "/TransactionInfo/YearsAvailables",
-            AmountResumes: "/TransactionInfo/AmountResumes"
+            AmountResumes: "/TransactionInfo/AmountResumes",
+            SavingPerYear: "/TransactionInfo/SavingsPerYear"
         },
         PendingTransactionEndpoint: "/PendingTransaction/SavePendingTransactions",      
     }

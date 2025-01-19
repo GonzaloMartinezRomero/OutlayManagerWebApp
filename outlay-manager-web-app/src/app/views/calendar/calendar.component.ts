@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DateCalendar } from "../../model/DateCalendar";
 import { MessageView, VerboseType } from "../../model/MessageView";
@@ -229,6 +229,31 @@ export class Calendar implements OnInit {
             this.notificationComponent?.openModalMessage(this.buildMessageError("Transaction code is empty!", "Add transaction code"));
         }
     }
+
+  public downloadPendingTransactions(): void {
+
+    this.notificationComponent?.showLoading("Downloading pending transactions...");
+
+    this.outlayManagerApiService.getPendingTransactions()
+      .subscribe(result => {
+        var numberOfTransactions: number = result.length;
+
+        if (numberOfTransactions == 0) {
+
+          this.notificationComponent?.finalizeLoading("No transactions for sync");
+
+        } else {
+
+          this.updateCalendarDate(null);
+          this.notificationComponent?.finalizeLoading(`Added ${numberOfTransactions} transactions`);
+        }
+
+      }, error => {
+        console.log(error);
+        this.notificationComponent?.closeLoadingModal();
+        this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
+      });
+  }
 
     private loadCodeListTransactions():void {
 

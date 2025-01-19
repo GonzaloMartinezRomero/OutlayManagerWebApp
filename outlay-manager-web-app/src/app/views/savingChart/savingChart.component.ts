@@ -1,4 +1,4 @@
-﻿import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
+import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
 import { ChartConfiguration, ChartData, ChartType } from "chart.js";
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from "ng2-charts";
@@ -76,17 +76,18 @@ export class SavingChart implements OnInit {
         DataLabelsPlugin
     ];
 
-    public barChartData: ChartData<'bar'> = {
+    public savingChartPerMonthData: ChartData<'bar'> = {
         labels: this.monthNames,
         datasets: []
-    };
+     };
+
 
     public updateTransactionsResume(response: any) {
 
         if (response.active.length === 1) {
 
             var indexDataSet: number = response.active[0].datasetIndex;
-            var year = this.barChartData.datasets[indexDataSet].label;
+            var year = this.savingChartPerMonthData.datasets[indexDataSet].label;
             var month: number = response.active[0].index;
 
             var yearParsed: number = Number.parseInt(year ?? "0");
@@ -105,7 +106,7 @@ export class SavingChart implements OnInit {
     }
 
     public clearChart(): void {
-        this.barChartData.datasets = [];
+        this.savingChartPerMonthData.datasets = [];
         this.chart?.update();
     }
 
@@ -145,7 +146,7 @@ export class SavingChart implements OnInit {
                 }
             });
 
-            this.barChartData.datasets.push({ data: values, label: this.yearSelected.toString() });
+            this.savingChartPerMonthData.datasets.push({ data: values, label: this.yearSelected.toString() });
             this.chart?.update();
         });
     }

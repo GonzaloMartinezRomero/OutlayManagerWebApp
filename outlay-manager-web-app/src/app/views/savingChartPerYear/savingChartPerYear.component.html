@@ -1,0 +1,14 @@
+<div class="container-fluid">   
+    <div class="row">
+        <div class="col-6">
+            <h3>Savings Per Year</h3>            
+                <canvas baseChart 
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [plugins]="barChartPlugins"
+                        [type]="barChartType">
+                </canvas>           
+        </div>
+    </div>
+</div>
+<notification-event #notificationComponent></notification-event>

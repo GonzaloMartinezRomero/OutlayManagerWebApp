@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="row">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #a39e8e;">
+            <a class="navbar-brand ms-4">Outlays Manager</a>
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav">
+                    <button class="btn navbar-btn" (click)="updateView(DASHBOARD)">Dashboard</button>
+                    <button class="btn navbar-btn ms-2" (click)="updateView(ANALYCER)">Analycer</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div *ngIf="viewName==DASHBOARD">
+        <div class="row mt-3">
+            <div class="col-12">
+                <calendar #calendar></calendar>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="viewName === ANALYCER">
+        <savingChart></savingChart>
+        <br />
+        <savingChartPerYear></savingChartPerYear>
+        <br />
+        <amountResumes></amountResumes>
+    </div>
+</div>
+<notification-event #notificationComponent></notification-event>
+
+
+

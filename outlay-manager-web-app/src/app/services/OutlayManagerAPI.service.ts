@@ -1,4 +1,4 @@
-﻿import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
@@ -9,9 +9,7 @@ import { ResponseTransactionAPI } from "../model/ResponseTransactionAPI";
 import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
 import { TransactionDTO } from "../model/TransactionDTO";
 import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
-import { AuthenticationToken } from "../model/UserCredentials/AuthenticationToken";
-import { UserCredential } from "../model/UserCredentials/UserCredential";
-import { TokenStorage } from "../utils/tokenStorage";
+import { SavingPerYearDto } from "../model/SavingPerYearDto";
 
 @Injectable()
 export class OutlayManagerAPI {
@@ -173,48 +171,19 @@ export class OutlayManagerAPI {
                 var exception = this.buildExceptionMessage(e, "Add Transaction Code");
                 throw exception;
             }));
-    }
+  }
 
-    public requestJWTTokenAuthorization(userLogin: string, password: string): Observable<AuthenticationToken> {
+  public savingsPerYear(): Observable<SavingPerYearDto[]> {
 
-        var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Authorization;
-        let header = { "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" };
-        let body = new UserCredential();
-        body.userName = userLogin;
-        body.password = password;
+    var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.SavingPerYear;
 
-        return this.httpClient.post<AuthenticationToken>(endPoint, body, { headers: header })
-            .pipe(catchError((e: any) => {                
+    return this.httpClient.get<SavingPerYearDto[]>(endPoint)
+      .pipe(catchError((e: any) => {
 
-                var exception = this.buildExceptionMessage(e, "Request JWT token");
-                throw exception;
-            }));
-    }
-
-    public async isTokenValid(token: string): Promise<boolean> {
-
-        var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + "/1";
-        var header: HttpHeaders = this.getHeader();
-
-        var tokenIsValid: boolean = false;
-
-        try {
-
-            var result = await this.httpClient.get<any>(endPoint, { headers: header })
-                .pipe(catchError((e: any) => {
-                    throw new ExceptionAPI();
-                }))
-                .toPromise();
-
-            tokenIsValid = (result != null);
-        }
-        catch (exception: any)
-        {
-            console.error("Token is not valid");
-        }
-
-        return tokenIsValid;
-    }
+        var exception = this.buildExceptionMessage(e, endPoint);
+        throw exception;
+      }));
+  }
 
     //Returns transactions saved asynchronously
     public getPendingTransactions(): Observable<TransactionDTO[]> {
@@ -281,17 +250,9 @@ export class OutlayManagerAPI {
     }    
 
     private getHeader(): HttpHeaders {
+  
+        var httpHeader: HttpHeaders = new HttpHeaders({ "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br" });
 
-        var token: string | null = TokenStorage.getToken();
-        var httpHeader: HttpHeaders;
-
-        if (token != null && token != "") {
-            httpHeader = new HttpHeaders({ "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br", "Authorization": "Bearer " + token });
-        }
-        else {
-            httpHeader = new HttpHeaders({ "Accept": "*/*", "Content-Type": "application/json", "Content-Encoding": "gzip,deflate,br"});
-        }
-        
         return httpHeader;
     }
 }
@@ -343,5 +304,3 @@ class TransactionCodeJSON {
         this.code = _code;
     }
 }
-
-

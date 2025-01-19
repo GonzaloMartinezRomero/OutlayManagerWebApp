@@ -5,10 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgChartsModule } from 'ng2-charts';
 import { AppComponent } from './app.component';
-import { Analycer } from "./pages/analycer/analycer.component";
-import { Dashboard } from "./pages/dashboard/dashboard.component";
-import { Login } from "./pages/login/login.component";
-import routerConfig from './router/router';
 import { CalendarService } from './services/calendar.service';
 import { OutlayManagerAPI } from './services/outlayManagerAPI.service';
 import { AmountResumes } from "./views/amountResumes/amountResumes.component";
@@ -18,6 +14,9 @@ import { NotificationEvent } from "./views/notification/notification.component";
 import { ResumeMonthTransaction } from "./views/resumeMonthTransaction/resumeMonthTransaction.component";
 import { ResumeOutlays } from './views/resumeOutlays/resumeOutlays.component';
 import { SavingChart } from "./views/savingChart/savingChart.component";
+import { MainPage } from "./pages/main-page/main-page.component";
+import { CommonModule } from "@angular/common";
+import { SavingChartPerYear } from "./views/savingChartPerYear/savingChartPerYear.component";
 
 @NgModule({
   declarations: [
@@ -26,20 +25,19 @@ import { SavingChart } from "./views/savingChart/savingChart.component";
         Calendar,
         ResumeOutlays,
         ResumeMonthTransaction,
-        Dashboard,
-        Analycer,
-        SavingChart,
-        Login,
+        SavingChart,      
         AmountResumes,
-        NotificationEvent
+        NotificationEvent,
+        MainPage,
+        SavingChartPerYear
   ],
   imports: [
       BrowserModule,
       FormsModule,
       HttpClientModule,
       NgbModule,
-      routerConfig,
-      NgChartsModule,     
+    NgChartsModule,
+    CommonModule
   ],
   providers: [
       CalendarService,

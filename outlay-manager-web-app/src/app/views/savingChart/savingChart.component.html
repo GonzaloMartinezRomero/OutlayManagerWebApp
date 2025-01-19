@@ -1,29 +1,32 @@
-﻿<div class="container-fluid m-4">
-    <div class="row align-items-center" style="width: 300px;" >        
-        <div class="col">           
-            <label class="h5">Select Year:</label>     
-            <select class="form-control ml-2" [(ngModel)]="yearSelected" id="year" name="year" (change)="addYearOutlaysSavings()">                                
+<div class="container-fluid m-4">
+    <div class="row align-items-center">
+        <div class="col-1">
+            <select class="form-control" [(ngModel)]="yearSelected" id="year" name="year">
                 <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
             </select>
-        </div>   
+        </div>
+        <div class="col-2">
+            <button class="btn btn-danger" (click)="clearChart()">Clear</button>
+            <button class="btn btn-success ms-2" (click)="addYearOutlaysSavings()">Add Year</button>
+        </div>
     </div>
     <br />
     <div class="row">
-        <div class="col-5">
-            <h3>Savings Resume</h3>            
-                <canvas baseChart width="1000" height="700"
-                        [data]="barChartData"
-                        [options]="barChartOptions"
-                        [plugins]="barChartPlugins"
-                        [type]="barChartType"
-                        (chartClick)="updateTransactionsResume($event)">
-                </canvas>           
+        <div class="col-8">
+            <h3>Savings Per Month</h3>            
+            <canvas baseChart
+                    [data]="savingChartPerMonthData"
+                    [options]="barChartOptions"
+                    [plugins]="barChartPlugins"
+                    [type]="barChartType"
+                    (chartClick)="updateTransactionsResume($event)">
+            </canvas>           
         </div>
-        <div class="col-4">
+        <div class="col-2">
            <h3>Expenses</h3>          
             <resumeMonthTransaction #expenses></resumeMonthTransaction>            
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <h3>Incomings</h3>
             <resumeMonthTransaction #incomings></resumeMonthTransaction>
         </div>
