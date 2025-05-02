@@ -23,9 +23,13 @@ export class SavingChart implements OnInit {
     private readonly monthNames: string[] = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
 
+        private loadFirstPieChart:boolean = true;
+
     @ViewChild(BaseChartDirective) private chart: BaseChartDirective | undefined;
     @ViewChild("expenses") private resumeMonthExpensesComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("expenses2") private resumeMonthExpensesComponent2: ResumeMonthTransaction | undefined;
     @ViewChild("incomings") private resumeMonthIncomingComponent: ResumeMonthTransaction | undefined;
+    @ViewChild("incomings2") private resumeMonthIncomingComponent2: ResumeMonthTransaction | undefined;
     @ViewChild("notificationComponent") private notificationComponent: NotificationEvent | undefined;
 
     public yearSelected: number = 0;
@@ -101,8 +105,15 @@ export class SavingChart implements OnInit {
 
     public updateResumeMonthTransactions(calendarContainer: TransactionsCalendarContainer) {
         
-        this.resumeMonthExpensesComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, true);
-        this.resumeMonthIncomingComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, false);
+        if(this.loadFirstPieChart){
+            this.resumeMonthExpensesComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, true);
+            this.resumeMonthIncomingComponent?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, false);
+            this.loadFirstPieChart = false;
+        }else{
+            this.resumeMonthExpensesComponent2?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, true);
+            this.resumeMonthIncomingComponent2?.loadTransactionsResume(calendarContainer.year, calendarContainer.month, false);
+            this.loadFirstPieChart = true;
+        }
     }
 
     public clearChart(): void {

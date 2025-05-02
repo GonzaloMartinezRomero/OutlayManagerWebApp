@@ -12,8 +12,8 @@
     </div>
     <br />
     <div class="row">
-        <div class="col-8">
-            <h3>Savings Per Month</h3>            
+        <div class="col-6 align-self-center">
+            <h4>Savings Per Month</h4>            
             <canvas baseChart
                     [data]="savingChartPerMonthData"
                     [options]="barChartOptions"
@@ -22,13 +22,14 @@
                     (chartClick)="updateTransactionsResume($event)">
             </canvas>           
         </div>
-        <div class="col-2">
-           <h3>Expenses</h3>          
-            <resumeMonthTransaction #expenses></resumeMonthTransaction>            
+        <div class="col-3">
+            <resumeMonthTransaction #expenses></resumeMonthTransaction>        
+            <resumeMonthTransaction #expenses2></resumeMonthTransaction>                 
         </div>
-        <div class="col-2">
-            <h3>Incomings</h3>
+        
+        <div class="col-3">
             <resumeMonthTransaction #incomings></resumeMonthTransaction>
+            <resumeMonthTransaction #incomings2></resumeMonthTransaction>                 
         </div>
     </div>
 </div>

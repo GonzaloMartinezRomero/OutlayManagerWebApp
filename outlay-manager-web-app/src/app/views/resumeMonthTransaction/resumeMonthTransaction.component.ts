@@ -4,6 +4,7 @@ import { BaseChartDirective } from "ng2-charts";
 import { TransactionDTO } from "../../model/TransactionDTO";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
 import { TransactionTypes } from "../../utils/TransactionTypes";
+import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 
 @Component(
     {
@@ -16,16 +17,34 @@ export class ResumeMonthTransaction{
 
     @ViewChild(BaseChartDirective) chartExpenses: BaseChartDirective | undefined;    
 
+    totalAmount:number = 0;
+    isExpenses: undefined | boolean = undefined;
+    showDate:boolean = false;
+    month:number = 0;
+    year:number = 0;
+
     constructor(private apiService: OutlayManagerAPI) { }
+
+    public pieChartPlugins = [DataLabelsPlugin];
 
     public pieChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio:false,
         plugins: {
-            legend: {
-                display: true,
-            },
-        },       
+            datalabels: {
+                color: '##000000',
+                formatter: (value: number, context) => {
+                    const label = context.chart.data.labels?.[context.dataIndex];
+                    return `${value}€ (${label})`;
+                },     
+              },
+              tooltip: {
+                enabled: true
+              },
+              legend:{
+                display:false
+              }
+        },    
     };
 
     public pieChartData: ChartData<'pie', number[], string > = {
@@ -38,7 +57,13 @@ export class ResumeMonthTransaction{
 
     public pieChartType: ChartType = 'pie';
 
-    public loadTransactionsResume(year:number, month:number, loadExpenses:boolean): void {
+    public loadTransactionsResume(year:number, month:number, loadExpenses:boolean, showDate: boolean = false): void {
+
+        this.totalAmount = 0;
+        this.isExpenses = loadExpenses;
+        this.showDate = showDate;
+        this.year = year;
+        this.month = month;
 
         var transactionsMap: Map<string, number> = new Map<string, number>();
 
@@ -95,9 +120,10 @@ export class ResumeMonthTransaction{
             transactinonsMap.set(trCode, totalAmount);
         }
         else {
-
             transactinonsMap.set(trCode, transaction.amount);
         }
+
+        this.totalAmount += Math.round(transaction.amount);
     }
 
 }

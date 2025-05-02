@@ -1,8 +1,17 @@
-﻿<div class="chart">
-    <canvas baseChart width="470" height="470"
+﻿<h4 *ngIf="isExpenses" class="text-center">
+    <p><i>Expenses {{month}}/{{year}}:</i></p>
+    <p><b>{{totalAmount}} €</b></p>
+</h4>
+<h4 *ngIf="!isExpenses" class="text-center">
+    <p><i>Incomings {{month}}/{{year}}:</i></p>
+    <p><b>{{totalAmount}} €</b></p>
+</h4>
+<div class="chart">  
+    <canvas baseChart
             [data]="pieChartData"
             [type]="pieChartType"
-            [options]="pieChartOptions">
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins">
     </canvas>
 </div>
 
