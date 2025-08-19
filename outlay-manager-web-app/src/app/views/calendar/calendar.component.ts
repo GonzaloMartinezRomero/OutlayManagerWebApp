@@ -230,7 +230,7 @@ export class Calendar implements OnInit {
         }
     }
 
-  public downloadPendingTransactions(): void {
+    public downloadPendingTransactions(): void {
 
     this.notificationComponent?.showLoading("Downloading pending transactions...");
 
@@ -254,6 +254,21 @@ export class Calendar implements OnInit {
         this.notificationComponent?.openModalMessage(ExceptionUtils.buildMessageErrorFromAPIError(error));
       });
   }
+
+    public downloadAllTransactions(): void {
+
+      this.outlayManagerApiService.downloadAllTransactions().subscribe(blob =>
+      {
+        // Create a link element
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+
+        a.href = objectUrl;
+        a.click();
+
+        URL.revokeObjectURL(objectUrl);
+      });
+    }
 
     private loadCodeListTransactions():void {
 

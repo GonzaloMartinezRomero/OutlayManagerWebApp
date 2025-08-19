@@ -200,6 +200,20 @@ export class OutlayManagerAPI {
             }));
     }
 
+    public downloadAllTransactions(): Observable<Blob> {
+
+      var endPoint: string = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.Transactions + '/DownloadAll';
+
+      var header: HttpHeaders = this.getHeader();
+
+      return this.httpClient.get(endPoint, { headers: header, responseType:'blob' })
+        .pipe(catchError((ex: any) => {
+
+          var exception = this.buildExceptionMessage(ex, "Download all transactions");
+          throw exception;
+        }));
+    }
+
     private buildExceptionMessage(exceptionAPI: any, endPoint: string): ExceptionAPI {
 
         console.log("Exception api");
