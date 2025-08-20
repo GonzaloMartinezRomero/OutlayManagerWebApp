@@ -17,6 +17,7 @@ import { SavingChart } from "./views/savingChart/savingChart.component";
 import { MainPage } from "./pages/main-page/main-page.component";
 import { CommonModule } from "@angular/common";
 import { SavingChartPerYear } from "./views/savingChartPerYear/savingChartPerYear.component";
+import { ResumeTransaction } from "./views/resumeTransaction/resumeTransaction.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SavingChartPerYear } from "./views/savingChartPerYear/savingChartPerYea
         AmountResumes,
         NotificationEvent,
         MainPage,
-        SavingChartPerYear
+        SavingChartPerYear,
+        ResumeTransaction
   ],
   imports: [
       BrowserModule,

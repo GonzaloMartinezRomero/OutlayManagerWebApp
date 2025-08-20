@@ -1,0 +1,21 @@
+<div class="container-fluid m-4">
+    <h4>Transactions Resume</h4>            
+    <div class="row align-items-center">
+        <div class="col-1">
+            <select class="form-control" [(ngModel)]="yearSelected" (change)="loadTransactionChart($event)" >
+                <option *ngFor="let yearAux of yearsAvailables">{{yearAux}}</option>
+            </select>
+        </div>        
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-11 align-self-center">          
+            <canvas baseChart
+                    [data]="barChartData"
+                    [options]="barChartOptions"
+                    [type]="barChartType">
+            </canvas>           
+        </div>
+    </div>
+</div>
+<notification-event #notificationComponent></notification-event>

@@ -10,6 +10,8 @@ import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
 import { TransactionDTO } from "../model/TransactionDTO";
 import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
 import { SavingPerYearDto } from "../model/SavingPerYearDto";
+import { ResumeTransaction } from "../views/resumeTransaction/resumeTransaction.component";
+import { ResumeTransactionDto } from "../model/ResumeTransactionDto";
 
 @Injectable()
 export class OutlayManagerAPI {
@@ -184,6 +186,18 @@ export class OutlayManagerAPI {
         throw exception;
       }));
   }
+
+  public resumeTransactions(year: number):Observable<ResumeTransactionDto[]>{
+     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.ResumeTransaction +'?year='+year;
+
+    return this.httpClient.get<ResumeTransactionDto[]>(endPoint)
+      .pipe(catchError((e: any) => {
+
+        var exception = this.buildExceptionMessage(e, endPoint);
+        throw exception;
+      }));
+  }
+
 
     //Returns transactions saved asynchronously
     public getPendingTransactions(): Observable<TransactionDTO[]> {

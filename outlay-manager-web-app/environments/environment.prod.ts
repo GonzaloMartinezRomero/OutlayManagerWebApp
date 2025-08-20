@@ -9,7 +9,8 @@ export const environment = {
             TransactionTypes: "/TransactionInfo/TransactionTypes",
             TransactionYearsAvailables: "/TransactionInfo/YearsAvailables",
             AmountResumes: "/TransactionInfo/AmountResumes",
-            SavingPerYear: "/TransactionInfo/SavingsPerYear"
+            SavingPerYear: "/TransactionInfo/SavingsPerYear",
+            ResumeTransaction: "/TransactionInfo/TransactionResume"
         },
         PendingTransactionEndpoint: "/PendingTransaction/SavePendingTransactions",      
     }
