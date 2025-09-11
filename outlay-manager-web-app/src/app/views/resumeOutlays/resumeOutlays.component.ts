@@ -10,18 +10,31 @@ import { TransactionTypes } from "../../utils/TransactionTypes";
     }
 )
 
-export class ResumeOutlays {
+export class ResumeOutlays implements OnInit{
 
     public incomingView: string = "0";
     public expensesView: string = "0";
     public savingView: string = "0";
     public totalAmountView: string = "0";
 
+    public totalInvested: string = "0"
+    public returnOfInversion: string = "0"
+    public gap: string = "0"
+
     public IMG_ARROW_UP: string = "arrowUp.svg";
     public IMG_ARROW_DOWN: string = "arrowDown.svg";
 
     constructor(private apiService: OutlayManagerAPI) {
       
+    }
+
+    ngOnInit(): void {
+        this.apiService.getInvestReport().subscribe(x=>{
+            
+            this.totalInvested = this.toEuroString(x.totalInvested);
+            this.returnOfInversion = this.toEuroString(x.returnOfInversion);
+            this.gap = this.toEuroString(x.gap);
+        });
     }
 
     public loadMonthResume(transactionCalendarContainer: TransactionsCalendarContainer):void {
@@ -58,7 +71,6 @@ export class ResumeOutlays {
         this.savingView = this.toEuroString(saving);
 
         this.loadTotalAmount();
-
     }
 
     public isGreaterThanZero(amount: string): boolean {

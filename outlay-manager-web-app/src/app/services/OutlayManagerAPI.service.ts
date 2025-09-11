@@ -12,6 +12,7 @@ import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
 import { SavingPerYearDto } from "../model/SavingPerYearDto";
 import { ResumeTransaction } from "../views/resumeTransaction/resumeTransaction.component";
 import { ResumeTransactionDto } from "../model/ResumeTransactionDto";
+import { InvestReport } from "../model/InvestReport";
 
 @Injectable()
 export class OutlayManagerAPI {
@@ -191,6 +192,17 @@ export class OutlayManagerAPI {
      var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.ResumeTransaction +'?year='+year;
 
     return this.httpClient.get<ResumeTransactionDto[]>(endPoint)
+      .pipe(catchError((e: any) => {
+
+        var exception = this.buildExceptionMessage(e, endPoint);
+        throw exception;
+      }));
+  }
+
+  public getInvestReport():Observable<InvestReport>{
+     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.InvestReport;
+
+    return this.httpClient.get<InvestReport>(endPoint)
       .pipe(catchError((e: any) => {
 
         var exception = this.buildExceptionMessage(e, endPoint);
