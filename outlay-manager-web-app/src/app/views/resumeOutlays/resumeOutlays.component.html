@@ -26,37 +26,13 @@
     <thead>
         <tr>
             <th scope="col">Total Amount</th>
+             <th scope="col">ROI</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td> <p>{{totalAmountView}}€</p></td>
-        </tr>
-    </tbody>
-</table>
-
-<table class="table table-bordered border-dark">
-    <thead>
-        <tr>
-            <th scope="col">Total Invested</th>
-            <th scope="col">ROI</th>
-            <th scope="col">GAP</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td> <p>{{totalInvested}}€</p></td>
-            <td> <p>{{returnOfInversion}}€</p></td>
-            <td>             
-             <div *ngIf="isGreaterThanZero(gap)">
-                    <p>{{gap}}€ <span><img src="/assets/{{IMG_ARROW_UP}}" /></span> </p> 
-                </div>
-
-                <div *ngIf="!isGreaterThanZero(gap)">
-                    <p>{{gap}}€ <span><img src="/assets/{{IMG_ARROW_DOWN}}" /></span> </p>  
-                </div>
-            
-            </td>
+             <td> <p>{{roi}}€</p></td>
         </tr>
     </tbody>
 </table>

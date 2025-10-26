@@ -31,13 +31,11 @@ export class Calendar implements OnInit {
     private deleteConfirmationModalRef?: NgbModalRef = undefined;
     private setupModalTransactionTypeRef?: NgbModalRef = undefined;
 
-    public readonly AdjustType: string = TransactionTypes.ADJUST;
     public readonly IncomingType: string = TransactionTypes.INCOMING;
     public readonly SpendType: string = TransactionTypes.SPENDING;
 
     public readonly IMG_SPENDING: string = "expenseArrow.png";
     public readonly IMG_INCOMING: string = "incomingArrow.png";
-    public readonly IMG_ADJUST: string = "adjustIcon.png";
 
     public transactionsCalendar: TransactionsCalendarContainer = new TransactionsCalendarContainer();
     public transactionView: TransactionDTO = new TransactionDTO();
@@ -83,7 +81,7 @@ export class Calendar implements OnInit {
             //Update childs values
             this.resumeMonthExpensesComponent?.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, true);
             this.resumeMonthIncomingsComponent?.loadTransactionsResume(transactionCalendarContainer.year, transactionCalendarContainer.month, false);
-            this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer);
+            this.resumeOutlaysComponent?.loadMonthResume(transactionCalendarContainer.year, transactionCalendarContainer.month);
         }
     }
 

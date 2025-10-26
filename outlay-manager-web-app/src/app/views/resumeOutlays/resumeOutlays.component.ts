@@ -1,7 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { TransacionCalendar, TransactionsCalendarContainer } from "../../model/TransactionsCalendarContainer";
 import { OutlayManagerAPI } from "../../services/outlayManagerAPI.service";
-import { TransactionTypes } from "../../utils/TransactionTypes";
 
 @Component(
     {
@@ -10,67 +8,38 @@ import { TransactionTypes } from "../../utils/TransactionTypes";
     }
 )
 
-export class ResumeOutlays implements OnInit{
+export class ResumeOutlays{
 
     public incomingView: string = "0";
     public expensesView: string = "0";
     public savingView: string = "0";
     public totalAmountView: string = "0";
-
-    public totalInvested: string = "0"
-    public returnOfInversion: string = "0"
-    public gap: string = "0"
-
+    public roi: string = "0";
+   
     public IMG_ARROW_UP: string = "arrowUp.svg";
     public IMG_ARROW_DOWN: string = "arrowDown.svg";
 
-    constructor(private apiService: OutlayManagerAPI) {
-      
-    }
+    constructor(private apiService: OutlayManagerAPI) {}
 
-    ngOnInit(): void {
-        this.apiService.getInvestReport().subscribe(x=>{
-            
-            this.totalInvested = this.toEuroString(x.totalInvested);
-            this.returnOfInversion = this.toEuroString(x.returnOfInversion);
-            this.gap = this.toEuroString(x.gap);
-        });
-    }
+    public loadMonthResume(year:number, month:number):void {
 
-    public loadMonthResume(transactionCalendarContainer: TransactionsCalendarContainer):void {
+       this.apiService.getMonthResume(year,month).subscribe(x=>{
 
-        var transactionCalendarMatrix: TransacionCalendar[][] = transactionCalendarContainer.matrixCalendar;
+        this.incomingView = this.toEuroString(x.incomings);
+        this.expensesView = this.toEuroString(x.expenses);
+        this.savingView = this.toEuroString(x.savings);
+       }
+       );
 
-        var incoming:number = 0.0;
-        var expenses:number = 0.0;
-        var saving: number = 0.0;
+        this.apiService.getTotalAmount().subscribe(x=>{
+            this.totalAmountView = this.toEuroString(x.amount);
+       }
+       );
 
-        for (let week of transactionCalendarMatrix) {
-            for (let transactionsDay of week) {
-                for (let transactionAux of transactionsDay.transactionArray) {
-                    switch (transactionAux.typeTransaction) {
-
-                        case TransactionTypes.INCOMING:
-                            incoming += transactionAux.amount;
-                            break;
-                        case TransactionTypes.ADJUST:
-                            incoming += transactionAux.amount;
-                            break;
-                        case TransactionTypes.SPENDING:
-                            expenses += transactionAux.amount;
-                            break;
-                    }
-                }
-            }
-        }
-
-        saving = incoming - expenses;
-
-        this.incomingView = this.toEuroString(incoming);
-        this.expensesView = this.toEuroString(expenses);
-        this.savingView = this.toEuroString(saving);
-
-        this.loadTotalAmount();
+        this.apiService.getRoi().subscribe(x=>{
+            this.roi = this.toEuroString(x.amount);
+       }
+       );
     }
 
     public isGreaterThanZero(amount: string): boolean {
@@ -79,30 +48,6 @@ export class ResumeOutlays implements OnInit{
         var value: number = parseFloat(amount);
 
         return value > valueCero;
-    }
-
-    private loadTotalAmount() {
-
-        var totalAmount: number = 0.0;
-
-        this.apiService.loadAllTransactions().subscribe(values => {
-            values.forEach(transactionAux => {
-                switch (transactionAux.typeTransaction) {
-
-                    case TransactionTypes.INCOMING:
-                        totalAmount += transactionAux.amount;
-                        break;
-                    case TransactionTypes.ADJUST:
-                        totalAmount += transactionAux.amount;
-                        break;
-                    case TransactionTypes.SPENDING:
-                        totalAmount -= transactionAux.amount;
-                        break;
-                }
-            });
-
-            this.totalAmountView = this.toEuroString(totalAmount);
-        })
     }
 
     private toEuroString(amount: number): string {

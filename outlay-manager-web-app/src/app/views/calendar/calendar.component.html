@@ -60,9 +60,6 @@
                                                 <div class="list-group">
                                                     <button *ngFor="let transactionAux of transactionDayAux.transactionArray" type="button" class="list-group-item list-group-item-action" (click)="openTransactionConfigModal(modalABMTransaction,transactionAux,undefined)">
                                                         <div [ngSwitch]="transactionAux.typeTransaction">
-                                                            <div *ngSwitchCase="AdjustType">
-                                                                <img src="/assets/{{IMG_ADJUST}}" /> {{toTransactionView(transactionAux)}}
-                                                            </div>
                                                             <div *ngSwitchCase="IncomingType">
                                                                 <img src="/assets/{{IMG_INCOMING}}" /> {{toTransactionView(transactionAux)}}
                                                             </div>

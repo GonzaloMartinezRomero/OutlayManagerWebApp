@@ -10,9 +10,10 @@ import { TransactionCodeDTO } from "../model/TransactionCodeDTO";
 import { TransactionDTO } from "../model/TransactionDTO";
 import { TypeTransactionDTO } from "../model/TypeTransactionDTO";
 import { SavingPerYearDto } from "../model/SavingPerYearDto";
-import { ResumeTransaction } from "../views/resumeTransaction/resumeTransaction.component";
 import { ResumeTransactionDto } from "../model/ResumeTransactionDto";
-import { InvestReport } from "../model/InvestReport";
+import { TotalAmountDto } from "../model/TotalAmountDto";
+import { RoiDto } from "../model/RoiDto";
+import { MonthResume } from "../model/MonthResume";
 
 @Injectable()
 export class OutlayManagerAPI {
@@ -199,10 +200,32 @@ export class OutlayManagerAPI {
       }));
   }
 
-  public getInvestReport():Observable<InvestReport>{
-     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.InvestReport;
+  public getMonthResume(year:number, month:number):Observable<MonthResume>{
+     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.MonthResume+ `?year=${year}&&month=${month}`;
 
-    return this.httpClient.get<InvestReport>(endPoint)
+    return this.httpClient.get<MonthResume>(endPoint)
+      .pipe(catchError((e: any) => {
+
+        var exception = this.buildExceptionMessage(e, endPoint);
+        throw exception;
+      }));
+  }
+
+    public getTotalAmount():Observable<TotalAmountDto>{
+     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.TotalAmount;
+
+    return this.httpClient.get<TotalAmountDto>(endPoint)
+      .pipe(catchError((e: any) => {
+
+        var exception = this.buildExceptionMessage(e, endPoint);
+        throw exception;
+      }));
+  }
+
+     public getRoi():Observable<RoiDto>{
+     var endPoint = environment.hostOutlayManagerAPI + environment.outlayManagerAPIEndpoints.TransactionsInfo.Roi;
+
+    return this.httpClient.get<RoiDto>(endPoint)
       .pipe(catchError((e: any) => {
 
         var exception = this.buildExceptionMessage(e, endPoint);

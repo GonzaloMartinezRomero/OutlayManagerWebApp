@@ -11,7 +11,9 @@ export const environment = {
             AmountResumes: "/TransactionInfo/AmountResumes",
             SavingPerYear: "/TransactionInfo/SavingsPerYear",
             ResumeTransaction: "/TransactionInfo/TransactionResume",
-            InvestReport: "/TransactionInfo/InvestReport"
+            MonthResume: "/TransactionInfo/MonthResume",
+            TotalAmount: "/TransactionInfo/TotalAmount",
+            Roi: "/TransactionInfo/Roi",
         },
         PendingTransactionEndpoint: "/PendingTransaction/SavePendingTransactions",      
     }

@@ -18,10 +18,11 @@ export class ResumeMonthTransaction{
     @ViewChild(BaseChartDirective) chartExpenses: BaseChartDirective | undefined;    
 
     totalAmount:number = 0;
-    isExpenses: undefined | boolean = undefined;
+    isExpenses: boolean = false;
     showDate:boolean = false;
     month:number = 0;
     year:number = 0;
+    hideInvest:boolean = false;
 
     constructor(private apiService: OutlayManagerAPI) { }
 
@@ -55,6 +56,11 @@ export class ResumeMonthTransaction{
 
     };
 
+    public toggleInvestTransactions():void{
+        this.hideInvest=!this.hideInvest;
+        this.loadTransactionsResume(this.year,this.month,this.isExpenses,this.showDate);
+    }
+
     public pieChartType: ChartType = 'pie';
 
     public loadTransactionsResume(year:number, month:number, loadExpenses:boolean, showDate: boolean = false): void {
@@ -72,6 +78,9 @@ export class ResumeMonthTransaction{
             {
                 transactions.forEach(transactionAux =>
                 {
+                    if(this.hideInvest && transactionAux.codeTransaction === 'INVERSION')
+                        return;
+
                     switch (transactionAux.typeTransaction) {
 
                         case TransactionTypes.SPENDING:
